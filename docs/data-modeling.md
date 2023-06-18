@@ -1,11 +1,29 @@
-# Introduction to data modeling
+# Modeling data relationships
 
-TODO: add some introduction text 
+Gaudi provides a powerful data modeling language. We could split modeling language features into four groups:
+
+#### 1.  `model` and `field`
+
+These are the most basic, low level abstractions which allow users to define a database schema.
+
+#### 2. `reference` and `relation`
+
+Describe relationships between database tables, using foreign keys.
+
+#### 3. `query` and `computed`
+
+`query` can be used to build complex, custom data relationships, which provide additional semantics which are not reflected in the database schema, but exist in a business domain, and can be helpful when querying the data.
+
+Similarly, `computed` defines expressions which are primitive values (`field`-like), but are calculated on-the-fly and are not persisted in the database.
+
+#### 4. `hook`
+
+Hooks are properties that can be used to enrich data models with data that cannot be calculated in a database, or are not supported natively via Gaudi language. They execute custom code and store results in the data model. They are similar to `computed` properties, but unlike them, `hook` properties are not available in query expressions (`filter`, `order by`).
 
 
-## Overview
+### Overview (example)
 
-TODO: Not sure if we want this here
+Here is an example `model` that utilizes all supported kinds of properties. 
 
 ```js
 model Organization {
