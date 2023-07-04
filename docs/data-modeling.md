@@ -1,3 +1,11 @@
+---
+sidebar_position: 2
+sidebar_label: Data modeling
+title: Data modeling
+slug: /data-modeling
+---
+
+
 # Modeling data relationships
 
 Gaudi provides a powerful data modeling language. We could split modeling language features into four groups:
