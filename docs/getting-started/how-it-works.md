@@ -20,7 +20,7 @@ You can split Gaudi source code in multiple files or directories, as you see fit
 
 ### VSCode extension
 
-You can download the [VSCode extension](./ext) for a better development experience - includes syntax highlighting, error reporting, and more.
+You can download the [VSCode extension](./) for a better development experience - includes syntax highlighting, error reporting, and more.
 
 ## The compiler
 

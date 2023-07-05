@@ -2,7 +2,6 @@
 sidebar_position: 2
 sidebar_label: Data modeling
 title: Data modeling
-slug: /data-modeling
 ---
 
 
