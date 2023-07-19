@@ -6,14 +6,12 @@ title: Defining APIs
 
 # Defining APIs
 
-## Overview
-
 Gaudi lets you create REST APIs. They are designed to offer a predictable behavior with very little code, which can be customized when needed, or extended with `hooks`.
 
 Gaudi can generate OpenAPI specification and client integration libraries that help you try out, test and integrate your API from day one.
 
 
-### Defining endpoints
+## Defining endpoints
 
 The concept of an API revolves around `entrypoint` and `endpoint` blocks. An entrypoint is a group of endpoints which operate on the same data source.
 
@@ -44,7 +42,7 @@ api {
 }
 ```
 
-### Identifying specific records
+## Identifying specific records
 
 Some endpoints operate on a whole collection of records, such as:
 - `create` endpoint
@@ -65,7 +63,7 @@ entrypoint Topic {
 }
 ```
 
-### Context and aliases
+## Context and aliases
 
 Each `entrypoint` can specify the alias using `as` attribute. An alias from the context is visible in single-cardinality endpoints, as well as in nested entrypoints.
 
@@ -87,7 +85,7 @@ entrypoint Topic as topic {
 
 Aliases from the context can be referenced within `authorize` or `action` blocks.
 
-### Authentication
+## Authentication
 
 Gaudi supports [authentication plugins](./auth) which let you define authorization methods.
 
@@ -99,7 +97,7 @@ auth {
 
 There is a special context alias - `@auth`, that contains a record of the currently logged-in user.
 
-### Authorization
+## Authorization
 
 You can define `authorize` block either per `endpoint` or an `entrypoint`.
 
@@ -116,7 +114,7 @@ api {
 }
 ```
 
-### Specifying the response schema
+## Specifying the response schema
 
 You can use `response` block to define the schema of the data returned in the HTTP response body. `response` can be specified per `entrypoint` or per `endpoint`.
 
@@ -137,7 +135,7 @@ response { id, title, author }
 
 includes all the fields found in `author`.
 
-### Customizing the endpoint action
+## Customizing the endpoint action
 
 If you want to extend the default endpoint behavior (required for `custom` endpoints), you can specify the `action` block.
 
@@ -159,13 +157,13 @@ entrypoint Organization {
 You can read more about actions on a dedicated page - [Actions reference](./actions)
 :::
 
-### Request body schema
+## Request body schema
 
 Endpoints that contain `create` or `update` actions may need to accept certain values from the client, via request body; as well as endpoints which contain `extra inputs` directives.
 
 Gaudi analyses the endpoint specification and computes the desired schema. This can be seen in OpenAPI specification, as well as in client integration libraries.
 
-#### How schema is calculated
+### How schema is calculated
 
 Inputs from `create` and `update` actions are namespaced with the action alias.
 
@@ -175,7 +173,7 @@ update org as newOrg {} // inputs are namespaced under "newOrg"
 
 Inputs derived from `extra inputs` don't have a namespace.
 
-##### Create actions
+#### Create actions
 
 By default, a `field` belonging to a model of a target action will be included if:
 - it's not an `id` field
@@ -200,7 +198,7 @@ create as org {
 }
 ```
 
-##### Update actions
+#### Update actions
 
 For security reasons, every updateable field must be explicitly specified:
 
@@ -212,7 +210,7 @@ update as org {
 
 With `update`, all inputs are optional, unless `required` is set. `default` is not supported in updade actions.
 
-##### Extra inputs
+#### Extra inputs
 
 Every `field` specified inside `extra inputs` goes into a root of the schema. It's required, unless `default` is provided.
 
@@ -225,7 +223,7 @@ create endpoint {
 }
 ```
 
-### Validation
+## Validation
 
 Every `input` derived from `field` in `create`, `update` or `extra inputs` inherits the `validate` blocks specified within a field.
 
@@ -234,60 +232,21 @@ model Topic {
   field name { type string, validate { minLength(4) and maxLength(64) }}
 }
 ```
+
+Gaudi will ensure every `input` passes it's `field`'s validation rules.
+
 You can also define a custom `validate` action:
 
 ```javascript
 extra inputs {
   field passwordRepeat { type string }
 }
+
 action {
   create as org {}
   validate with key "passwordRepeat" {
-    assert { passwordRepeat is org.password }
+    assert { isEqual(passwordRepeat, org.password) }
   }
 }
 ```
 
-
-## Example
-
-
-```javascript
-// minimal example
-api {
-  // movie is a model
-  entrypoint Movie {
-    // data returned in the HTTP response body
-    response { id, slug, title, year, avgRating }
-
-    // GET /api/movie/{movieId}
-    get endpoint {}
-
-    // POST /api/movie/
-    create endpoint {
-      authorize { @auth.user.isAdmin }
-    }
-
-    // a custom endpoint
-    custom endpoint {
-      // POST /api/movie/search/
-      POST many "/search"
-
-      extra inputs {
-        field titleSearch { type string, validate { minLen(4) and maxLen(256) } }
-      }
-
-      action {
-        query as results {
-          from Movie as m,
-          filter { startsWith(m.title, titleSearch) },
-          limit 100,
-          order by { avgRating desc },
-          select { id, slug, title, year, avgRating, totalRatings }
-        }
-        respond { body results }
-      }
-    }
-  }
-}
-```

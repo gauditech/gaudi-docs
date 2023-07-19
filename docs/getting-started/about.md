@@ -17,7 +17,9 @@ Some of its design goals include:
 - offer powerful, fast and simple data querying engine
 - simplify integration of client apps with the backend
 
-Additionally, due to it's declarative syntax and a domain-specific language features, Gaudi is able to understand the intention behind the code. This in turn enables us to simplify and automate both tedious and repetitive code, as well as complex workflows.
+### Future roadmap
+
+Due to it's declarative syntax and a domain-specific language features, Gaudi is able to understand the intention behind the code. This in turn enables us to simplify and automate both tedious and repetitive code, as well as complex workflows.
 
 Some examples of such workflows include:
 - automatic database query caching and cache invalidation
