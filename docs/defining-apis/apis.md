@@ -6,169 +6,287 @@ title: Defining APIs
 
 # Defining APIs
 
-In Gaudi, REST APIs can be defined within `api` and `entrypoint` blocks.
+## Overview
 
-## API blocks
+Gaudi lets you create REST APIs. They are designed to offer a predictable behavior with very little code, which can be customized when needed, or extended with `hooks`.
 
-`api` is a root-level block used to define REST API. It can have an optional name (which transforms into a namespace). Here are some examples:
+Gaudi can generate OpenAPI specification and client integration libraries that help you try out, test and integrate your API from day one.
 
-```
-api {} // url path prefix is /api/
-api Admin {} // url path prefix is /api/admin/
-```
 
-## Entrypoints
+### Defining endpoints
 
-`entrypoint` is a block that defines a set of endpoints operating on the same data relationship. Entrypoints can be nested. Outer-most `entrypoint` must target a `model`, while nested ones can target data relationships. Url path prefix is derived from the endpoint path.
+The concept of an API revolves around `entrypoint` and `endpoint` blocks. An entrypoint is a group of endpoints which operate on the same data source.
 
-Here's an example showcasing how to nest entrypoints:
+Endpoints represent specific REST endpoints. Gaudi supports five "built-in" endpoints, and a custom one:
+- `create` endpoint
+- `list` endpoint
+- `get` endpoint
+- `update` endpoint
+- `delete` endpoint
+- `custom` endpoint
 
-```
+Here is a short example of an api specification:
+
+```javascript
 api {
-  entrypoint Post {
-    entrypoint comments { // targets `Post.comments` relation
-      entrypoint likes {} // targets `Comment.likes` relation
+  entrypoint Topic {
+    create endpoint {} // POST /api/topic/
+    get endpoint {}    // GET /api/topic/{id}/
+    custom endpoint {  // POST /api/topic/search/
+      POST many "/search"
+      ...
+    }
+    custom endpoint {  // POST /api/topic/{id}/disable/
+      POST one "/disable"
+      ...
     }
   }
 }
 ```
 
-## Endpoints
+### Identifying specific records
 
-Both `api` and `entrypoint` blocks don't do much without the `endpoint` specification.
-`endpoint` builds into a REST API endpoint, and operates on a target relationship defined in the `entrypoint`.
+Some endpoints operate on a whole collection of records, such as:
+- `create` endpoint
+- `list` endpoint
+- `custom` endpoint with `many`
 
-Let's extend the previous example to include some endpoints:
+Others operate on a single record, such as:
+- `get` endpoint
+- `update` endpoint
+- `delete` endpoint
+- `custom` endpoint with `one`
+
+In order to look up a specific record, by default Gaudi expects a record `id` in the URL path. This can be customized using `identify` property:
+
+```
+entrypoint Topic {
+  identify { through name }
+}
+```
+
+### Context and aliases
+
+Each `entrypoint` can specify the alias using `as` attribute. An alias from the context is visible in single-cardinality endpoints, as well as in nested entrypoints.
 
 ```javascript
-api {
-  // /api/post/
-  entrypoint Post {
-
-    create endpoint {} // POST /api/post/
-    list endpoint {}  // GET /api/post/
-    get endpoint {} // GET /api/post/{postId}/
-
-    // /api/post/{postId}/comments/
-    entrypoint comments {
-
-      // POST /api/post/{postId}/comments/
-      create endpoint {}
-
-      // GET /api/post/{postId}/comments/
-      list endpoint {}
-
-      // /api/post/{postId}/comments/{commentId}/likes/
-      entrypoint likes {
-        // POST /api/post/{postId}/comments/{commentId}/likes
-        create endpoint {}
-
-        // GET /api/post/{postId}/comments/{commentId}/likes
-        list endpoint {}
-
-        // DELETE /api/post/{postId}/comments/{commentId}/likes/{likeId}
-        delete endpoint {}
+entrypoint Topic as topic {
+  entrypoint posts as post {
+    authorize {
+      // this block can see `topic` alias
+      // this block can't see `post` alias because it's scoped to a collection of posts
+    }
+    update endpoint {
+      authorize {
+        // this block can see both `topic` and `post` aliases
       }
     }
   }
 }
 ```
 
-### CRUD endpoints
+Aliases from the context can be referenced within `authorize` or `action` blocks.
 
-There are five different "crud" endpoints. The first two operate on a **collection** of data:
+### Authentication
 
-- `create endpoint`
-- `list endpoint`
+Gaudi supports [authentication plugins](./auth) which let you define authorization methods.
 
-The other three operate on a **single** record within a collection. Those are:
+```javascript
+auth {
+  method basic {}
+}
+```
 
-- `get endpoint`
-- `update endpoint`
-- `delete endpoint`
+There is a special context alias - `@auth`, that contains a record of the currently logged-in user.
 
-### Custom endpoints
+### Authorization
 
-You can also define a custom endpoint.
-
-Here's an example:
+You can define `authorize` block either per `endpoint` or an `entrypoint`.
 
 ```javascript
 api {
-  entrypoint Post {
-    custom endpoint {
-      GET many /search // GET /api/post/search/
-      GET one /statistics // GET /api/post/{postId}/statistics/
+  entrypoint Topic {
+    // only logged-in users can access topics
+    authorize { @auth is not null }
+    // only admins can create new topics
+    create endpoint {
+      authorize { @auth.profile.isAdmin is true }
     }
   }
 }
 ```
 
-#### Difference between crud and custom endpoints
+### Specifying the response schema
 
-There are several differences between these two kinds of endpoints:
+You can use `response` block to define the schema of the data returned in the HTTP response body. `response` can be specified per `entrypoint` or per `endpoint`.
 
-- crud endpoint always returns a target resource, respecting the `response` property
-- crud endpoint method & path cannot be customized; custom endpoints must specify those parameters
-- custom endpoint doesn't return any data by default - requires either a `hook` with `responds` flag or a `respond` action
-  
-
-## Customization
-
-### Identify through
-Typically, a single record is identified through an `id` field. This can be customized using `identify through`. This directive can be defined within an `entrypoint`:
 
 ```javascript
 api {
-  entrypoint User {
-    identify { through profile.email }
-    get endpoint {} // GET /api/user/{userProfileEmail}/
+  entrypoint Topic {
+    response { id, title, author { id, username, profile { imageUrl } } }
   }
 }
 ```
 
-the `through` relationship path has be **unique**. You can read more about how **unique path** is detected!
+By default, all the fields on the target model will be included. This also happens when you specify a nested relationship without its own block, eg:
 
-### response
+```
+response { id, title, author }
+```
 
-`response` can be added to an `entrypoint`. It only affects **crud** endpoints. It defines which data is returned upon a successful request.
+includes all the fields found in `author`.
+
+### Customizing the endpoint action
+
+If you want to extend the default endpoint behavior (required for `custom` endpoints), you can specify the `action` block.
 
 ```javascript
-api {
-  entrypoint Post {
-    response {
-        id, title, message,
-        comments {
-            id, message, likeCount,
-            author { id, profileUrl, username }
-            }
-        }
-        author { id, profileUrl, username }
+entrypoint Organization {
+  create endpoint {
+    // default `create` action for this endpoint
+    create as org {}
+    // assign current user as admin member of the org
+    create org.memberships as member {
+      set member @auth
+      set role "admin"
+    }
   }
 }
 ```
-
-### Actions
-
-Each crud endpoint ships a default action, but the endpoint action block can be customized as needed. Custom endpoints don't have a defult action, therefore they always expect an explicit action definition.
 
 :::info
-
-Actions have a [dedicated page](./actions.md) where they are described in detail.
+You can read more about actions on a dedicated page - [Actions reference](./actions)
 :::
 
-#### Syntax
+### Request body schema
+
+Endpoints that contain `create` or `update` actions may need to accept certain values from the client, via request body; as well as endpoints which contain `extra inputs` directives.
+
+Gaudi analyses the endpoint specification and computes the desired schema. This can be seen in OpenAPI specification, as well as in client integration libraries.
+
+#### How schema is calculated
+
+Inputs from `create` and `update` actions are namespaced with the action alias.
+
+```javascript
+update org as newOrg {} // inputs are namespaced under "newOrg"
+```
+
+Inputs derived from `extra inputs` don't have a namespace.
+
+##### Create actions
+
+By default, a `field` belonging to a model of a target action will be included if:
+- it's not an `id` field
+- doesn't have `default` value
+- is not `set` within action block
+
+You can force a field with a `default` value by explicitly using the `input` directive:
+
+```javascript
+create as org {
+  input { status { required } }
+}
+```
+
+If the `required` keyword is ommited, this input will be optional, since it a default value is known.
+
+You can also explicitly set a default value for any input:
+
+```javascript
+create as org {
+  input { status { default true } }
+}
+```
+
+##### Update actions
+
+For security reasons, every updateable field must be explicitly specified:
+
+```javascript
+update as org {
+  input { status, name, logoUrl }
+}
+```
+
+With `update`, all inputs are optional, unless `required` is set. `default` is not supported in updade actions.
+
+##### Extra inputs
+
+Every `field` specified inside `extra inputs` goes into a root of the schema. It's required, unless `default` is provided.
 
 ```javascript
 create endpoint {
-  action { // customize action block
-    create as post { // overwrite a default implementation
-      set user @auth // ensure `user` is a server-side setter
+  extra inputs {
+    field passwordRepeat { type string }
+    field subscribedToNewsletter { type boolean, default false }
+  }
+}
+```
+
+### Validation
+
+Every `input` derived from `field` in `create`, `update` or `extra inputs` inherits the `validate` blocks specified within a field.
+
+```javascript
+model Topic {
+  field name { type string, validate { minLength(4) and maxLength(64) }}
+}
+```
+You can also define a custom `validate` action:
+
+```javascript
+extra inputs {
+  field passwordRepeat { type string }
+}
+action {
+  create as org {}
+  validate with key "passwordRepeat" {
+    assert { passwordRepeat is org.password }
+  }
+}
+```
+
+
+## Example
+
+
+```javascript
+// minimal example
+api {
+  // movie is a model
+  entrypoint Movie {
+    // data returned in the HTTP response body
+    response { id, slug, title, year, avgRating }
+
+    // GET /api/movie/{movieId}
+    get endpoint {}
+
+    // POST /api/movie/
+    create endpoint {
+      authorize { @auth.user.isAdmin }
     }
 
-    // create 
-    create post.upvote as upvote {
-      set user @auth
+    // a custom endpoint
+    custom endpoint {
+      // POST /api/movie/search/
+      POST many "/search"
+
+      extra inputs {
+        field titleSearch { type string, validate { minLen(4) and maxLen(256) } }
+      }
+
+      action {
+        query as results {
+          from Movie as m,
+          filter { startsWith(m.title, titleSearch) },
+          limit 100,
+          order by { avgRating desc },
+          select { id, slug, title, year, avgRating, totalRatings }
+        }
+        respond { body results }
+      }
     }
   }
 }
