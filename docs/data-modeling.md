@@ -429,7 +429,7 @@ model User {
 
 ## Hooks
 
-Hooks offer a way to expand your application **by writing custom code**. There are multiple types of hooks, you can read more about hooks in general HERE (TODO)
+Hooks offer a way to expand your application **by writing custom code**. There are multiple types of hooks, you can read more about hooks in general: [Runtimes and hooks](./runtimes-hooks)
 
 In models, `hook` property is used to enrich the model with custom data.
 
@@ -472,33 +472,3 @@ model User {
 ```
 
 Gaudi will invoke the `fetchUserPaymentHistory` only when needed. You can read more about Gaudi data retreival and computation logic HERE: TODO.
-
-### Custom business logic
-
-Consider the following example:
-
-```js
-model ChessGame {
-  reference playerWhite { to User }
-  reference playerBlack { to User }
-
-  relation moves { from GameMove, through game }
-
-  // highlight-start
-  hook currentBoard {
-    params {
-      moves: query { from moves, order by { id asc } }
-    }
-    source calculateBoardFromMoves from "./hooks.js"
-  }
-  // highlight-end
-}
-
-model GameMove {
-  reference game { to Game }
-  field playerColor { type string, validate { oneOf(["white", "black"]) }}
-  field move { type string } // algebraic notation
-}
-```
-
-The application is keeping track of chess game moves. They are stored in an "algebraic notation", which means every move is a string. You can implement a custom function `calculateBoardFromMoves` that converts a list of moves into a 2D representation of a game board.
