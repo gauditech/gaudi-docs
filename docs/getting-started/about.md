@@ -19,14 +19,14 @@ Some of its design goals include:
 
 ### Future roadmap
 
-Due to it's declarative syntax and a domain-specific language features, Gaudi is able to understand the intention behind the code. This in turn enables us to simplify and automate both tedious and repetitive code, as well as complex workflows.
+Due to it's declarative syntax and a domain-specific language features, Gaudi is able to understand the intention behind the code. This in turn enables it to simplify and automate both tedious and repetitive code, as well as complex workflows.
 
 Some examples of such workflows include:
+
 - automatic database query caching and cache invalidation
 - zero-downtime database migrations
-- automatic GraphQL and live pub/sub interfaces built from REST API specification
+- automatic GraphQL and live pub/sub interfaces built from API specification
 - auto-generated documentation, tests, and more
-
 
 ## Current status
 

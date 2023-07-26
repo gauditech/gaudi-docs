@@ -6,21 +6,65 @@ title: Customizing with Actions
 
 # Customizing with Actions
 
-## How it works
+## About actions
 
-Gaudi supports several actions which help you describe the behavior of an endpoint. Actions are declarative, but the ordering of the actions matters, which also makes them somewhat imperative.
+Actions are the real "units of work" in Gaudi. Both `entrypoint`s and `endpoint`s are basically just a context in which `action`s are executed. Actions are defined in `endpoint` block. They are declarative, but their ordering matters, which also makes them somewhat imperative.
+
+Gaudi supports several [types of action](#types-of-actions) which define the behavior of an endpoint. Each `endpoint` contains one or more action. Built-in endpoints (iow. all except `custom` endpoints), if not specified otherwise, contain one implicite action that matches their type. Eg. `create` endpoint contains `create` action. Custom endpoints contain no implicite actions so they require at least one explicite action.
+
+Endpoint actions syntax
+
+```js
+// ...
+create endpoint {
+  action {
+    create <target model> <as [alias]> {
+      // action body
+    }
+  }
+}
+// ...
+```
+
+Each action requires a model it will work upon. By default, target model is optional and defaults to current action's `entrypoint` target model. If you need to affect (eg. create or update) other models in the same request, then `<target model>` can be used to indicate which model the action is targeting.
+
+Example
+
+```js
+entrypoint Users {
+  create endpoint {
+    action {
+      // create new User record and store it in context with alias "createUser"
+      create as createdUser {
+        // action body
+      }
+      // create new AuditLog record with a reference to "createdUser" record
+      create AuditLog {
+        set author createdUser
+      }
+    }
+  }
+}
+// ...
+```
+
+### Context
+
+All actions work with some data. They needs some data on input and return some data on output. This input and output come from their _"context"_. Context is an environment created by action's parent `entrypoint` and `endpoint`. It is something like a namespace or a map in which values can be stored and taken from. Eg. URL parameters, input body, outputs from previous actions, ...
 
 ### Context and aliases
 
-Each action can define an alias using `as` keyword. This stores the result of the action in the context, and makes it possible to reference the results in the following actions. Aliases in the context represent immutable data.
+Each action can define an alias using `as` keyword. This stores the result of the action in the context, and makes it available to subsequent actions. Aliases stored in the context are immutable.
 
-Here's an example that describes the behavior:
+Here's an example that describes this behavior:
 
-```javascript
+```js
+// action that updates record referenced by the "user" property
 update user as updatedUser {
   input { username }
 }
 
+// action that creates a new "UsernameLog" record
 create UsernameLog {
   set userId user.id
   set old user.username // this hasn't changed
@@ -30,9 +74,15 @@ create UsernameLog {
 
 ### Fieldsets
 
-Fieldset is a collection of user inputs for a specific endpoint. This corresponds to data an endpoint expects in a HTTP body, in JSON format.
+Fieldset is a collection of user inputs for a specific endpoint. This describes a JSON data structure an endpoint expects in a HTTP body.
 
-Fieldsets are generated based on endpoint actions and extra inputs.
+Fieldsets are generated automatically based on endpoint actions and extra inputs. This means that Gaudi will go through all your actions, collect all fields that they use and automatically generate schema of input required by your endpoint.
+
+If your actions use target model's fields, Gaudi knows evenrything about them and can automatically generate proper validations. If you need custom fields that do not corelate directly to the fields in target model, you can override some properties of your fields (eg. add default value) or even use `extra input`s to describe completely arbitrary fields.
+
+// TODO: describe inputs, extra inputs and sets
+
+#### Fieldset creation rules
 
 Here's how the fieldset is calculated:
 
@@ -47,9 +97,7 @@ Here's how the fieldset is calculated:
   - in `update`, inputs must be explicitly declared using `input` atom
   - in `create`, every field not covered by previous rules is included as a required input
 
-
-
-Here is an example snippet we can use to demonstrate how fieldsets are created:
+Fieldset creation example
 
 ```javascript
 
@@ -80,7 +128,7 @@ api {
         }
         create User as user {}
         // creating org.memberships automatically
-        // sets membership.org to `org` 
+        // sets membership.org to `org`
         create org.memberships as membership {
           set user user
         }
@@ -90,29 +138,28 @@ api {
 }
 ```
 
-Here is an example JSON body that constitutes a correct HTTP body:
+Example of a valid JSON body
 
 ```json
 {
   "org": { "name": "Acme Inc" },
-  "user": { "email": "john.doe@gaudi.tech" },
+  "user": { "email": "john.doe@gaudi.tech" }
 }
 ```
 
-Here's a table that clarifies this even further:
+Fieldset field creation table
 
-| Alias         | Table name    | Field        |  In fieldset                            |
-|-------------- |---------------|--------------|-----------------------------------------|
-| org           | Org           |  id          | **no** - id field is autogenerated      |
-|               |               |**name**      | **required**                            |
-|               |               |  paymentPlan | **no** - set on the server side         |
-| user          | User          |  id          | **no** - id field is autogenerated      |
-|               |               |**email**     | **required**                            |
-|               |               |**acceptsTos**| **optional** - has a default value      |
-| membership    | OrgMembership |  id          | **no** - id field is autogenerated      |
-|               |               |  org_id      | **no** - set on the server side         |
-|               |               |  user_id     | **no** - set on the server side         |
-
+| Alias      | Table name    | Field          | In fieldset                        |
+| ---------- | ------------- | -------------- | ---------------------------------- |
+| org        | Org           | id             | **no** - id field is autogenerated |
+|            |               | **name**       | **required**                       |
+|            |               | paymentPlan    | **no** - set on the server side    |
+| user       | User          | id             | **no** - id field is autogenerated |
+|            |               | **email**      | **required**                       |
+|            |               | **acceptsTos** | **optional** - has a default value |
+| membership | OrgMembership | id             | **no** - id field is autogenerated |
+|            |               | org_id         | **no** - set on the server side    |
+|            |               | user_id        | **no** - set on the server side    |
 
 ## Types of actions
 
@@ -142,7 +189,7 @@ update myOrg as updatedOrg {
 
 ### `delete`
 
-Delete action operates on any kind of relationship - supporting both single records and collections. It doesn't support any atoms, and can't have an `alias`.
+Delete operates on a single record, but it also works any kind of relationship, both single records and collections. It doesn't support any atoms, and can't have an `alias`.
 
 #### Syntax
 
@@ -152,7 +199,7 @@ delete org.repos {}
 
 ### `validate`
 
-A `validate` action can be used to run custom validation expressions. It expects a `key` which specifies how the errors will be packed into a response object when validation errors occur.
+A `validate` action can be used to run custom validation expressions. It expects a `key` which specifies under which field name the error will be added in validation error response.
 
 #### Syntax
 
@@ -169,7 +216,7 @@ You can read more on data validation on a **dedicated data validation page**.
 
 ### `query`
 
-Query action is used to query data relationships and run operations on top of the results. `query` supports `select`, `update` and `delete` atoms.
+Query action is used to fetch data using relationships and use that data in subsequent actions. `query` supports `select`, `update` and `delete` atoms.
 
 #### Syntax
 
@@ -184,16 +231,19 @@ query as updatedPosts {
 }
 ```
 
-#### Usage of select
+#### Usage of `select` atom
 
 :::info
 
-Select can't be used with `delete`. It can **optionally** be used otherwise. If you omit `select`, Gaudi will use automatic dependency collection based on future references of an alias. However, providing explicit `select` turns this `alias` into a `struct` type. This is explained in more detail **here**.
+If `select` atom is omitted from `query`, Gaudi will automatically return only properties actually used in subsequent actions but still consider it to be of target model type (eg. `Post`). Providing explicit `select` will turn this `alias` into a `struct` type.
+
+TODO: link to automatic deps collection and context typing
+
 :::
 
 ### `respond`
 
-Respond action can be used in custom endpoints specify which data should be sent via HTTP response. This is similar to `response` in the crud endpoints. It accepts a `struct` type, so most of the time you'll have to `query` with `select` to fetch the data to respond with.
+Respond action can be used in custom endpoints for sending HTTP response. It uses data available in the context so you can use other action types (eg. `fetch`) to provide this data.
 
 #### Syntax
 
@@ -212,17 +262,38 @@ respond {
 }
 ```
 
-
 ### `execute`
 
+TODO: describe execute action
 
+## Action atoms
 
-## Supported atoms
+### `input`
 
+Input is used to override some properties of an existing data model field.
 
-### `create`, `update`
+Properties
 
-`create` and `update` operate on a single record, as per **cardinality rules**.
+- `default [value]` - Makes an input field optional but uses provided as a default if not provided in input.
+- `optional` - Makes input field optional and ommits it from action if not provided in input.
+
+Syntax
+
+```js
+// default value
+update {
+  input isPublic { default false }
+}
+
+// optional
+update {
+  input description { optional }
+}
+```
+
+#### Usage in actions
+
+`create` and `update` actions operate on a single record, as per **cardinality rules**.
 
 These are the only actions that can accept user inputs. See **fieldsets** for more info.
 
@@ -241,17 +312,28 @@ create org.memberships {
 }
 ```
 
+### `set`
 
+Set is used to manually set field value. this value can be any expression or a `hook`
 
+Syntax
 
-#### Setter hooks
+```js
+// primitive value
+update {
+  set isPublic false
+}
 
-`set` keyword can compute a value using a **hook**:
+// from context
+update {
+  set author userFromContext
+}
 
-```javascript
-
+// hook
 set nameAndDesc hook {
   arg name name
   arg desc description
   inline '`${name} and ${desc}`'
 }
+
+```

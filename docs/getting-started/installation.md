@@ -6,12 +6,26 @@ title: Installation
 
 ## Creating new projects
 
-You create new Gaudi project from scratch using `create-gaudi-app` tool.
+You can create new Gaudi project from scratch using `create-gaudi-app` tool.
 
-Run the following command:
+To run `create-gaudi-app` you may choose one of the following methods:
+
+#### npx
 
 ```bash
 npx create-gaudi-app
+```
+
+#### npm
+
+```bash
+npm create gaudi-app
+```
+
+#### yarn
+
+```sh
+yarn create gaudi-app
 ```
 
 Interactive wizard will guide you through the process.
@@ -20,15 +34,27 @@ Interactive wizard will guide you through the process.
 
 Gaudi supports the following templates:
 
-- `gaudi-ts`: Gaudi backend, with TypeScript runtime
-- `vite-react-ts`: A full-stack setup with Gaudi backend, TypeScript runtime, and Vite/React/Typescript on the frontend
+- **Gaudi backend project** - Gaudi backend, with TypeScript runtime
+- **Gaudi backend with React+TS+Vite frontend** - A full-stack setup with Gaudi backend, TypeScript runtime, and Vite/React/Typescript on the frontend
 
 ## Adding Gaudi to an existing project
 
-You can run Gaudi alongside existing `express.js` project. To do this, install `gaudi` package:
+You can run Gaudi alongside existing [express](https://expressjs.com/) project. To do this, install `gaudi` package:
 
 ```bash
 npm install gaudi
 ```
 
-and integrate `useGaudi` express middleware, see [example](./installation.md) (TODO).
+and integrate Gaudi using `useGaudi` express middleware provided by `gaudi` package
+
+```js
+import { useGaudi } from "@gaudi/runtime/dist/server/express";
+
+const app = express();
+
+app.use(useGaudi(config));
+
+app.listen(3001, "localhost", () => {
+  console.log(`Gaudi app is started ...`);
+});
+```

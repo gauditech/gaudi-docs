@@ -4,33 +4,33 @@ sidebar_label: Data modeling
 title: Data modeling
 ---
 
-
 # Modeling data relationships
 
 Gaudi provides a powerful data modeling language. We could split modeling language features into four groups:
 
-#### 1.  `model` and `field`
+#### `model` and `field`
 
 These are the most basic, low level abstractions which allow users to define a database schema.
 
-#### 2. `reference` and `relation`
+#### `reference` and `relation`
 
 Describe relationships between database tables, using foreign keys.
 
-#### 3. `query` and `computed`
+#### `query` and `computed`
 
 `query` can be used to build complex, custom data relationships, which provide additional semantics which are not reflected in the database schema, but exist in a business domain, and can be helpful when querying the data.
 
 Similarly, `computed` defines expressions which are primitive values (`field`-like), but are calculated on-the-fly and are not persisted in the database.
 
-#### 4. `hook`
+Both `query` and `computed` properties are also available in query expressions (filter, order by).
 
-Hooks are properties that can be used to enrich data models with data that cannot be calculated in a database, or are not supported natively via Gaudi language. They execute custom code and store results in the data model. They are similar to `computed` properties, but unlike them, `hook` properties are not available in query expressions (`filter`, `order by`).
+#### `hook`
 
+Hooks are properties that can be used to enrich data models with data that cannot be calculated in a database, or are not supported natively via Gaudi language. They execute custom code and store results in the data model. They are similar to `computed` properties, but unlike them, `hook` properties are not available in query expressions.
 
-### Overview (example)
+## Overview (example)
 
-Here is an example `model` that utilizes all supported kinds of properties. 
+Here is an example `model` that utilizes all supported kinds of properties.
 
 ```js
 model Organization {
@@ -73,9 +73,9 @@ Fields are properties of model that correspond to columns in database tables. He
 ...
 ```
 
-Let's break down the properties of a `field`:
+### Properties
 
-### `name`
+#### `name`
 
 Defines a field name. This property is **required**.
 
@@ -83,9 +83,9 @@ Defines a field name. This property is **required**.
 field myFieldName { ... }
 ```
 
-### `type`
+#### `type`
 
-A primitive type identifier defining the type of the field. This property is **required**.
+A primitive type identifier defining the type of the field. Available types: `string`, `integer`, `float` and `boolean`. This property is **required**.
 
 ```js
 field rating {
@@ -94,9 +94,9 @@ field rating {
 }
 ```
 
-### `dbname`
+#### `dbname`
 
-Defines a name of a corresponding table column. Optional, defaults to the value of fields `name` property if not provided.
+Defines a name of a corresponding table column. Optional, defaults to lower-cased value of field's `name` property (eg. `"firstName"` property name will be converted to `"firstname"` dbname).
 
 ```js
 field rating {
@@ -105,11 +105,12 @@ field rating {
 }
 ```
 
-### `unique`
+#### `unique`
 
 Marks a field as unique. This will create a unique constraint on the field in the database.
-TODO: `unique` propery also affects a compiler type checking in certain scenarios. Learn more.
-identify through, usage of "one"
+TODO: `unique` propery also affects a compiler type checking in certain scenarios.
+
+TODO: Learn more: [identify through, usage of "one"](data-modeling)
 
 ```js
 field name {
@@ -119,10 +120,9 @@ field name {
 }
 ```
 
-### `nullable`
+#### `nullable`
 
-Marks the field as nullable. Non-nullable fields specify `NOT NULL` on a database level.
-`nullable` prevents such behavior.
+Marks the field as nullable. By default, fields are non-nullable which results in `NOT NULL` statement on a database level. `nullable` prevents such behavior and allows `NULL` values in target field.
 
 ```js
 field deleted_at {
@@ -132,9 +132,9 @@ field deleted_at {
 }
 ```
 
-### `default`
+#### `default`
 
-Defines a default value. This makes the field optional by default in create or update actions.
+Defines a default field value. This makes the field optional (see [nullable](#nullable)) by default in create or update actions.
 The type of a default value must match the field type.
 
 ```js
@@ -146,7 +146,7 @@ field rating {
 }
 ```
 
-### `validate`
+#### `validate`
 
 Defines a validate expression. This is used to validate user-provided data during `create` and `update` actions.
 
@@ -173,9 +173,9 @@ reference owner { to Owner }
 ...
 ```
 
-Let's break down the properties of `reference`:
+### Properties
 
-### `name`
+#### `name`
 
 A name of the reference in the data model. Gaudi will automatically create a field by appending a `_id` to a reference name. This property is **required**.
 
@@ -185,7 +185,7 @@ reference org { ... }
 // field org_id { type integer, ... }
 ```
 
-### `to`
+#### `to`
 
 Specify a model to create a relationship with.
 
@@ -196,9 +196,10 @@ reference organization {
 }
 ```
 
-### `unique`, `name`, `nullable`
+#### `unique`, `name`, `nullable`
 
 Reference accepts certain properties that are passed through to an underlying `field` property that reference creates. The following properties are allowed in `reference`:
+
 - `unique`
 - `nullable`
 - `dbname`
@@ -226,14 +227,14 @@ model User {
 }
 model Post {
   ...
-  reference user { to User }
+  reference author { to User }
   ...
 }
 ```
 
-Properties:
+### Properties
 
-### `name`
+#### `name`
 
 Defines a name of the relation. References are not persisted to a database, so this is defined purely on an application level. This property is **required**.
 
@@ -244,14 +245,14 @@ model User {
 }
 ```
 
-### `from` and `through`
+#### `from` and `through`
 
 These point to a properties of a linked `reference`.
 The following parameters must match:
 
-- (`reference` -> *model name*) must match (`relation` -> `from`)
-- (`reference` -> `to`) must match (`relation` -> *model name*)
-- (`reference` -> `name`) must match (`relation` -> `through`) 
+- reference's parent model name must match relation's `from` property (eg. `Post`)
+- reference's `to` property must match relation's parent model name (eg. `User`)
+- reference's `name` property must match relation's `to` property (eg. `author`)
 
 ```js
 model Post {
@@ -267,7 +268,7 @@ model User {
 
 ## Computeds
 
-`computed` properties are arithmetic expressions that calculate values on the fly, meaning its value is not persisted to the database. You can use them in `select` and `filter` blocks.
+`computed` properties are arithmetic expressions that calculate values on the fly, meaning its value is not persisted to the database but is available as a property on fetched model records. You can use them in `select` and `filter` blocks.
 
 List of supported functions and operators: TODO show here or link to another page/section
 
@@ -321,10 +322,9 @@ model Users {
 }
 ```
 
-
 ## Queries
 
-You can build complex data relationships using `query` properties. You can `filter` the relationships or slice them using `limit` and `offset` with `order by`.
+You can build complex data relationships using `query` properties by filtering these relationships using `filter` or slicing them using `limit` and `offset` with `order by`.
 
 :::tip
 
@@ -354,11 +354,11 @@ model Users {
 }
 ```
 
-`query` supports multiple properties:
+### Properties
 
-### `from`
+#### `from`
 
-`from` can point to another property in the model, as well as traverse through data model.
+`from` can traverse through data model's relationships or even query from other `query` properties in the model.
 
 The following example traverses through a many-to-many relationship `Membership` and exposes `org.members` which resolves to a `User` model.
 
@@ -376,8 +376,9 @@ model Org {
     from memberships.user
   }
 }
+```
 
-### `filter`
+#### `filter`
 
 `filter` can be used to filter relationships based on other properties.
 
@@ -398,7 +399,7 @@ model User {
 
 ### `Order by`, `limit` and `offset`
 
-Let's expand the example from the section above (TODO link)
+Let's expand the example from the section [above](#filter)
 
 ```js
 model Post {
@@ -429,7 +430,7 @@ model User {
 
 ## Hooks
 
-Hooks offer a way to expand your application **by writing custom code**. There are multiple types of hooks, you can read more about hooks in general: [Runtimes and hooks](./runtimes-hooks)
+Hooks offer a way to expand your application **by writing custom code**. There are multiple types of hooks, you can read more about them in [Runtimes and hooks](./runtimes-hooks)
 
 In models, `hook` property is used to enrich the model with custom data.
 
