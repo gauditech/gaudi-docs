@@ -111,7 +111,7 @@ Read more about context and aliases - [Actions](./actions#context-and-aliases)
 
 ## Authentication
 
-Gaudi supports [authentication plugins](./auth) which let you define authorization methods.
+Gaudi supports authentication plugins which let you define authorization methods.
 
 ```javascript
 auth {
