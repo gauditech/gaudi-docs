@@ -44,16 +44,4 @@ You can run Gaudi alongside existing [express](https://expressjs.com/) project. 
 npm install gaudi
 ```
 
-and integrate Gaudi using `useGaudi` express middleware provided by `gaudi` package
-
-```js
-import { useGaudi } from "@gaudi/runtime/dist/server/express";
-
-const app = express();
-
-app.use(useGaudi(config));
-
-app.listen(3001, "localhost", () => {
-  console.log(`Gaudi app is started ...`);
-});
-```
+and run Gaudi application standalone or integrate it into an existing application. See [running Gaudi application](../core-concepts/application) for details about running Gaudi.
