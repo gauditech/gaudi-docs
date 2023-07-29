@@ -10,7 +10,9 @@ model Repo {
   field name { type string }
   field slug { type string, unique }
 }
+
 entrypoint Repo {
+  // identify Repo record via "slug" field
   identify { through slug }
 
   get endpoint {}
