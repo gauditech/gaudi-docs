@@ -1,9 +1,8 @@
 ---
 sidebar_position: 3
-title: Actions
 ---
 
-# Actions reference
+# Actions
 
 ## Actions block
 

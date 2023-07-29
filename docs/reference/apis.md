@@ -1,9 +1,8 @@
 ---
 sidebar_position: 2
-title: APIs
 ---
 
-# APIs reference
+# APIs
 
 ## API
 

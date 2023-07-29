@@ -90,8 +90,20 @@ const config = {
             title: "Docs",
             items: [
               {
-                label: "Gaudi documentation",
+                label: "Getting started",
                 to: "/",
+              },
+              {
+                label: "Core concepts",
+                to: "/core-concepts",
+              },
+              {
+                label: "Advanced topics",
+                to: "/advanced-topics",
+              },
+              {
+                label: "Reference",
+                to: "/reference",
               },
             ],
           },

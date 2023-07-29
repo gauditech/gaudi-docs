@@ -1,7 +1,8 @@
 ---
 sidebar_position: 2
-title: APIs
 ---
+
+# APIs
 
 APIs are used to expose your data and interact with the outside world (eg. your frontend, clients, ...). Gaudi lets you create REST APIs base on your data model. They are designed to offer a predictable behavior with very little code, which can be customized when needed, or extended with `hooks`.
 

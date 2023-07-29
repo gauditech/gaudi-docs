@@ -1,9 +1,9 @@
 ---
 sidebar_position: 1
-title: Models
+slug: /reference
 ---
 
-# Model reference
+# Models
 
 ## Models
 

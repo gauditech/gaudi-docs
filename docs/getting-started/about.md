@@ -1,6 +1,5 @@
 ---
 sidebar_position: 1
-title: About Gaudi
 slug: /
 ---
 

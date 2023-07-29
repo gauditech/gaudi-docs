@@ -1,4 +1,4 @@
-## Hooks
+# Hooks
 
 Hooks offer a way to expand your application **by writing custom code**. There are multiple types of hooks, you can read more about them in [Runtimes and hooks](./runtimes-hooks)
 

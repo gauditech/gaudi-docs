@@ -1,9 +1,8 @@
 ---
 sidebar_position: 4
-title: Queries
 ---
 
-# Queries reference
+# Queries
 
 ## Queries
 
