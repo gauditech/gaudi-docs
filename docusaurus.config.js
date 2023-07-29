@@ -57,26 +57,31 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: "img/docusaurus-social-card.jpg",
       navbar: {
-        title: "Gaudi documentation",
+        title: "Gaudi",
         logo: {
           alt: "Gaudi Logo",
           src: "img/logo.svg",
+          href: "https://gaudi.tech",
         },
         items: [
-          {
-            type: "docSidebar",
-            sidebarId: "docsSidebar",
-            position: "left",
-            label: "Docs",
-          },
+          // {
+          //   type: "docSidebar",
+          //   sidebarId: "docsSidebar",
+          //   position: "left",
+          //   label: "Docs",
+          // },
           // {
           //   href: 'https://github.com/facebook/docusaurus',
           //   label: 'GitHub',
           //   position: 'right',
           // },
         ],
+      },
+      colorMode: {
+        defaultMode: "dark",
+        disableSwitch: false,
+        respectPrefersColorScheme: false,
       },
       footer: {
         style: "dark",
