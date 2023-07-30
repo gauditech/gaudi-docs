@@ -4,38 +4,39 @@ sidebar_position: 5
 
 # Hooks
 
-Gaudi is able to integrate with custom code written in JavaScript.
+Declarative approach is excellent for many use-cases but every once in a while, we simply need to resort to some specific imperative code (e.g. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi hooks come in. They are the _"escape hatches"_ which allow you to use any JS custom code or library you need and run it inside Gaudi.
 
-To do so, a `runtime` needs to be defined.
+First, you need to defin a `runtime` which contains a path to your hooks folder.
 
 ```javascript
 runtime MyJsRuntime {
-  default
   path "./path/to/hooks"
 }
 ```
-
-This helps Gaudi resolve the source paths.
 
 :::info
 If you're using TypeScript, make sure to specify a path to compiled code, for example within `dist` directory.
 :::
 
-## Hooks
-
-Once runtime is defined, you can write hooks. Typically, you'll have only one runtime. In case you define multiple, you either should mark one of them `default`, otherwise you'll have to specify which runtime to use:
+Once a runtime is defined, you can write hooks.
 
 ```javascript
 hook myModelHook {
-  runtime MyJsRuntime
-  arg value 41
+  // hook arguments
+  arg value1 41 // literal value arg
+  arg value2 newUser.name // context value arg
+
+  // target hook name and source
   source runHook from "./examples.js"
 }
 ```
 
 ## Inline and external hooks
 
-You can write hooks in two different ways: `inline`, typically a one-liners, or `source` referencing a function defined in your `runtime` directory.
+You can write hooks in two different ways:
+
+- `inline`, typically a one-liners,
+- `source` referencing a function defined in your `runtime` directory.
 
 ### Inline hooks
 
@@ -63,6 +64,7 @@ A function (in this case `getValue`) accepts context (varies based on hook type)
 
 ```javascript
 export function getValue(ctx, args) {
+  // using lodash lib using "_" global var
   return _.identity(args.myValue);
 }
 ```

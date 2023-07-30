@@ -6,9 +6,9 @@ sidebar_position: 3
 
 ## About actions
 
-Actions are the real "units of work" in Gaudi. Both `entrypoint`s and `endpoint`s are basically just a context in which `action`s are executed. Actions are defined in `endpoint` block. They are declarative, but their ordering matters, which also makes them somewhat imperative.
+Actions are the real "units of work" in Gaudi. Both `entrypoint`s and `endpoint`s are basically just a context in which `action`s are executed. Actions are defined in `endpoint` blocks. They are declarative, but their ordering matters, which also makes them somewhat imperative.
 
-Gaudi supports several [types of action](#types-of-actions) which define the behavior of an endpoint. Each `endpoint` contains one or more action. Built-in endpoints (iow. all except `custom` endpoints), if not specified otherwise, contain one implicite action that matches their type. Eg. `create` endpoint contains `create` action. Custom endpoints contain no implicite actions so they require at least one explicite action.
+Gaudi supports several [types of action](#types-of-actions) which define the behavior of an endpoint. Each `endpoint` contains one or more actions. Built-in endpoints (iow. all except `custom` endpoints), if not specified otherwise, contain one implicite action that matches their type. Eg. `create` endpoint contains `create` action etc. Custom endpoints contain no implicite actions so they require at least one explicite action.
 
 Endpoint actions syntax
 
@@ -29,14 +29,20 @@ Each action requires a model it will work upon. By default, target model is opti
 Example
 
 ```js
-entrypoint Users {
+// works on "User" model
+entrypoint User {
+  update endpoint {
+    // contains only implicite default action which updates all the fields on default "User" model
+  }
+
   create endpoint {
     action {
-      // create new User record and store it in context with alias "createUser"
+      // default model action
+      // create new "User" record and store it in context with alias "createUser"
       create as createdUser {
         // action body
       }
-      // create new AuditLog record with a reference to "createdUser" record
+      // create new "AuditLog" record with a reference to "createdUser" record
       create AuditLog {
         set author createdUser
       }
@@ -48,11 +54,11 @@ entrypoint Users {
 
 ## Context
 
-All actions work with some data. They needs some data on input and return some data on output. This input and output come from their _"context"_. Context is an environment created by action's parent `entrypoint` and `endpoint`. It is something like a namespace or a map in which values can be stored and taken from. Eg. URL parameters, input body, outputs from previous actions, ...
+Actions usually need some data to work with; they receive some data on the input and return some data on the output. This data comes from action's _"context"_. Context is an environment created by action's parent `entrypoint` and `endpoint`. It is something like a namespace or a map in which values can be stored and taken from. Eg. URL parameters, input body, outputs from previous actions, ...
 
 ### Context and aliases
 
-Each action can define an alias using `as` keyword. This stores the result of the action in the context, and makes it available to subsequent actions. Aliases stored in the context are immutable.
+Each action can define an alias using `as` keyword. This stores the result of the action in the context, and makes it available to subsequent actions. Aliases stored in the context are immutable and cannot be overwritten by subsequent actions.
 
 Here's an example that describes this behavior:
 
@@ -94,17 +100,19 @@ Aliases from the context can be referenced within `authorize` or `action` blocks
 
 ---
 
-### Fieldsets
+## Fieldsets
 
 Fieldset is a collection of user inputs for a specific endpoint. This describes a JSON data structure an endpoint expects in a HTTP body.
 
-Fieldsets are generated automatically based on endpoint actions and extra inputs. This means that Gaudi will go through all your actions, collect all fields that they use and automatically generate schema of input required by your endpoint.
+Fieldsets are generated automatically based on endpoint actions and extra inputs. This means that Gaudi will go through all your actions, collect all the fields that they use and automatically generate schema of input required by your endpoint.
 
-If your actions use target model's fields, Gaudi knows evenrything about them and can automatically generate proper validations. If you need custom fields that do not corelate directly to the fields in target model, you can override some properties of your fields (eg. add default value) or even use `extra input`s to describe completely arbitrary fields.
+If you need custom fields that do not corelate directly to the fields in target model, you can override some properties of your fields (eg. add default value) or even use `extra input`s to describe completely arbitrary fields.
 
-<!-- TODO: describe inputs, extra inputs and sets -->
+// TODO: describe inputs, extra inputs and sets
 
-## Validation
+### Validation
+
+When your actions use target model's fields, Gaudi knows everything about them and can automatically generate model-level validations (eg. type validation, required fields, ...).
 
 Every `input` derived from `field` in `create`, `update` or `extra inputs` inherits the `validate` blocks specified within a field.
 
@@ -116,7 +124,7 @@ model Topic {
 
 Gaudi will ensure every `input` passes it's `field`'s validation rules.
 
-### How is schema calculated
+### Fieldset schema
 
 Inputs from `create` and `update` actions are namespaced with the action alias.
 

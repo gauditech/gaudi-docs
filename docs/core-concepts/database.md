@@ -4,11 +4,11 @@ sidebar_position: 6
 
 # Database
 
-One of Gaudi's main missions is to provide developers with best possible tools and processes for handling databases both in development as in production.
+One of Gaudi's main missions is to provide developers with best possible tools and processes for handling databases, both in development as in production.
 
-Gaudi comes with a powerfull and expressive [data modeling syntax](./models) and makes sure your models are a _single source of truth_ for all types throughout your [APIs](./apis) and [integrations](./integrations.md)
+Gaudi comes with a powerful and expressive [data modeling syntax](./models) and makes sure your models are a _single source of truth_ for all types throughout your [APIs](./apis) and [integrations](./integrations.md)
 
-Great modeling syntax is not the only thing where Gaudi can help you. Database structure and data changes (aka _migrations_) are very tedious and error prone process. Gaudi tries to make this process as painless as possible by providing a set of database management tools via [Gaudi CLI](../reference/cli.md)
+However, a great modeling syntax is not the only area where Gaudi can assist you. Managing database structure and data changes (also known as _migrations_) can be a tedious and error-prone process. To alleviate this, Gaudi offers a set of database management tools through the [Gaudi CLI](../reference/cli.md), making this process as painless as possible.
 
 This process can be divided in two different phases: development and production.
 

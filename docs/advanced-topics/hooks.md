@@ -43,3 +43,17 @@ model User {
 ```
 
 Gaudi will invoke the `fetchUserPaymentHistory` only when needed. You can read more about Gaudi data retreival and computation logic HERE: TODO.
+
+---
+
+// TODO: describe multiple and defualt runtimes
+
+Typically, you'll have only one runtime. In case you define multiple, you either should mark one of them `default`, otherwise you'll have to specify which runtime to use:
+
+```javascript
+hook myModelHook {
+  runtime MyJsRuntime
+  arg value 41
+  source runHook from "./examples.js"
+}
+```

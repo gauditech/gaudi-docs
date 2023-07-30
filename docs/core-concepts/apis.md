@@ -4,29 +4,30 @@ sidebar_position: 2
 
 # APIs
 
-APIs are used to expose your data and interact with the outside world (eg. your frontend, clients, ...). Gaudi lets you create REST APIs base on your data model. They are designed to offer a predictable behavior with very little code, which can be customized when needed, or extended with `hooks`.
+APIs are used to expose your data and interact with the outside world (eg. your frontend, clients, ...). Gaudi lets you create REST APIs based on your data models and their relationships. They are designed to offer a predictable behavior with very little code, which can be customized and extended when needed.
 
-Using your API definition Gaudi can automatically generate OpenAPI specification and client integration libraries that help you try out, test and integrate your API from day one.
+Using your API definition Gaudi can also automatically generate OpenAPI specification and client integration libraries that help you try, test and integrate your API from day one.
 
 ## Defining endpoints
 
 The concept of an API revolves around, `api`, `entrypoint` and `endpoint` blocks.
 
-Entrypoint is a group of endpoints which operate on the same data model. Several `entrypoint`s can be grouped into an `api` block.
+Entrypoint is a group of endpoints which operate on the same resource, a model or a model relationship. Several `entrypoint`s can be grouped into a common `api` block.
 
-Endpoints represent specific REST endpoints. Gaudi supports five "built-in" endpoints, and a custom one:
+Endpoints represent specific REST endpoints. Gaudi supports five built-in and one custom endpoint:
 
-- `create` - uses HTTP `POST`, for creating a new record
-- `list` - uses HTTP `GET`, for returning a list of records
-- `get` - uses HTTP `GET`, for returning a single record
-- `update` - uses HTTP `PATCH`, for updating a single record
-- `delete` - uses HTTP `DELETE`, for deleting a single record
+- `create` - uses HTTP `POST`, creates a new record
+- `list` - uses HTTP `GET`, returns a list of records
+- `get` - uses HTTP `GET`, returns a single record
+- `update` - uses HTTP `PATCH`, updates a single record
+- `delete` - uses HTTP `DELETE`, deletes a single record
 - `custom` - completely customizable endpoint
 
-Here is a short example of an api specification:
+Here is a short example of an API specification:
 
 ```javascript
 api {
+  // operations on "Topic" model
   entrypoint Topic {
     create endpoint {} // POST /api/topic/
     get endpoint {}    // GET /api/topic/{id}/
@@ -44,32 +45,33 @@ api {
 
 ## Identifying specific records
 
-Some endpoints operate on a whole collection of records, such as:
+Some endpoints operate on a whole collection of records and the others operate on a single record.
+This is reflected in endpoint's context, return type but also in the way a URL is constructed for each endpoint type.
+
+### Collection endpoints
+
+Collection endpoints types:
 
 - `create` endpoint
 - `list` endpoint
 - `custom` endpoint with `many` cardinality
 
-Others operate on a single record, such as:
+They require only data model name
+
+```
+/api/topic
+```
+
+### Single endpoints
+
+Single endpoint types:
 
 - `get` endpoint
 - `update` endpoint
 - `delete` endpoint
 - `custom` endpoint with `one` cardinality
 
-This reflects in an URL for each type of endpoint.
-
-#### Collection endpoints
-
-Collection endpoints require only data model name
-
-```
-/api/topic
-```
-
-#### Single endpoints
-
-Single endpoints require both data model name and record identifier
+These endpoints require both data model name and record identifier
 
 ```
 /api/topic/{identifier}
@@ -85,7 +87,9 @@ entrypoint Topic {
 
 ## Response schema
 
-Each `entrypoint` is based on a single data model (_target_) and each `endpoint` returns some part of this target model. You can use `response` block to define which part of the target model is returned. `response` can be specified per `entrypoint` or per `endpoint`.
+Each `entrypoint` is based on a single data model called a _"target"_ and each `endpoint` returns some part (fields) of this target model.
+
+To define which part of the target model is returned you can use `response` block. `response` can be specified per `entrypoint` or per `endpoint`.
 
 ```javascript
 api {
@@ -107,6 +111,6 @@ response { id, title, author { name } }
 
 ## Request body schema
 
-Endpoints that contain `create` or `update` actions may need to accept certain values from the client, via request body. Gaudi analyses the endpoint specification and computes the desired request schema.
+`create` and `update` endpoints may need to accept certain input values from the client, tipically via HTTP request body. Gaudi analyses the endpoint specification and computes the desired request schema.
 
-Read more in [Actions](./actions.md)
+More about this in [Actions](./actions.md)
