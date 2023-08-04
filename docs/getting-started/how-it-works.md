@@ -55,7 +55,7 @@ We've created two related models, `Author` and `Book`. These models correspond t
 
 Now that we have our models, we need to expose those data to our clients and users, iow. we need to create an API.
 
-Gaudi uses a concept of `entrypoint`s which represent a group of endpoints and operations on a single resource, eg. a model or a relation.
+Gaudi uses a concept of `entrypoint`s which represent a group of endpoints and operations on a single resource, e.g. a model or a relation.
 
 ```js title="bookstore.gaudi"
 api {
@@ -134,13 +134,13 @@ populator Dev {
 
 Now we can run this populator each time we change our database and have our database populated.
 
-Ofc, we can have as many populators as we like. We can have eg. one simple for development, one strict for testing, one randomized and real world for presentations, ... you get the point. Don't let your database be empty ever again!
+Ofc, we can have as many populators as we like. We can have e.g. one simple for development, one strict for testing, one randomized and real world for presentations, ... you get the point. Don't let your database be empty ever again!
 
 ### Custom code
 
-Declarative approach is great when it comes to using well known concepts and best practices for building most of our application. But every once in a while we simply need to resort to some specific imperative code (eg. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi hooks jump in. They are the _"escape hatches"_ which allow you to resort to any custom code or library you need and make sure it all runs happily inside Gaudi.
+Declarative approach is great when it comes to using well known concepts and best practices for building most of our application. But every once in a while we simply need to resort to some specific imperative code (e.g. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi hooks jump in. They are the _"escape hatches"_ which allow you to resort to any custom code or library you need and make sure it all runs happily inside Gaudi.
 
-Gaudi also supports expressions wich allow you custom data manipulations (eg. string manipulation, number calculations, ...) while still staying in Gaudi's controlled environment.
+Gaudi also supports expressions wich allow you custom data manipulations (e.g. string manipulation, number calculations, ...) while still staying in Gaudi's controlled environment.
 
 Oh, did we mention you can use hooks and expressions in database queries and as model properties! 😎
 

@@ -6,9 +6,9 @@ sidebar_position: 3
 
 ## About actions
 
-Actions are the real "units of work" in Gaudi. Both `entrypoint`s and `endpoint`s are basically just a context in which `action`s are executed. Actions are defined in `endpoint` blocks. They are declarative, but their ordering matters, which also makes them somewhat imperative.
+Actions are the real "units of work" in Gaudi. Both `entrypoint`s and `endpoint`s are basically just a context in which `action`s are executed. Actions are defined inside `endpoint` blocks. They are declarative, but their ordering matters, which also makes them somewhat imperative.
 
-Gaudi supports several [types of action](#types-of-actions) which define the behavior of an endpoint. Each `endpoint` contains one or more actions. Built-in endpoints (iow. all except `custom` endpoints), if not specified otherwise, contain one implicite action that matches their type. Eg. `create` endpoint contains `create` action etc. Custom endpoints contain no implicite actions so they require at least one explicite action.
+Gaudi supports several [types of action](#types-of-actions) which define the behavior of an endpoint. Each `endpoint` can contain one or more actions. Built-in endpoints (iow. all except `custom` endpoints), if not specified otherwise, contain one implicit action that matches their type. E.g. `create` endpoint contains `create` action etc. Custom endpoints contain no implicit actions so they require at least one explicite action.
 
 Endpoint actions syntax
 
@@ -24,15 +24,17 @@ create endpoint {
 // ...
 ```
 
-Each action requires a model it will work upon. By default, target model is optional and defaults to current action's `entrypoint` target model. If you need to affect (eg. create or update) other models in the same request, then `<target model>` can be used to indicate which model the action is targeting.
+Each action requires a model it works on. By default, target model is optional and defaults to the current action's `entrypoint` target model. If you need to affect (e.g. create or update) other models in the same request, then `<target model>` can be used to indicate which model the action is targeting.
 
-Example
+Action can define an `alias` using `as` keyword. If the action returns a value (e.g. fetches, creates or updates a record), this value can later be accessed via that alias. More on aliases in [context](#context) section.
+
+Endpoint actions example
 
 ```js
 // works on "User" model
 entrypoint User {
   update endpoint {
-    // contains only implicite default action which updates all the fields on default "User" model
+    // contains only implicit default action which updates all the fields on default "User" model
   }
 
   create endpoint {
@@ -54,11 +56,11 @@ entrypoint User {
 
 ## Context
 
-Actions usually need some data to work with; they receive some data on the input and return some data on the output. This data comes from action's _"context"_. Context is an environment created by action's parent `entrypoint` and `endpoint`. It is something like a namespace or a map in which values can be stored and taken from. Eg. URL parameters, input body, outputs from previous actions, ...
+Actions usually need some data to work with; they receive some data on the input and return some data on the output. This data comes from action's _"context"_. Context is an environment created by action's parent `entrypoint` and `endpoint`. It is something like a namespace or a map that can store and return values. It is used to stored data required and provided by actions, such as URL parameters, input body and outputs from previous actions.
 
 ### Context and aliases
 
-Each action can define an alias using `as` keyword. This stores the result of the action in the context, and makes it available to subsequent actions. Aliases stored in the context are immutable and cannot be overwritten by subsequent actions.
+If an action returns a result, that result is stored in the context, and is available to subsequent actions. If an action defines an alias, result is stored and can be accessed by the name defined by the alias. Aliases stored in the context are immutable and cannot be overwritten by the subsequent actions.
 
 Here's an example that describes this behavior:
 
@@ -68,17 +70,19 @@ update user as updatedUser {
   input { username }
 }
 
-// action that creates a new "UsernameLog" record
-create UsernameLog {
+// action that creates a new "UsernameChangelog" record
+create UsernameChangelog {
   set userId user.id
-  set old user.username // this hasn't changed
-  set new updatedUser.username // this is the updated value
+  set oldValue user.username // this hasn't changed
+  set newValue updatedUser.username // this is the updated value
 }
 ```
 
-### Context and aliases
+Each `entrypoint` can also specify an alias using `as` attribute. This alias will be used as a default alias for _target_, depending on the [endpoint type](./apis#identifying-specific-records).
 
-Each `entrypoint` can specify the alias using `as` attribute. An alias from the context is visible in single-cardinality endpoints, as well as in nested entrypoints.
+Nested entrypoints create nested context. Aliases created in parent xontexts are visible in child contexts. Shadowing of aliases in parent contexts is not allowed and an error will be thrown.
+
+An entrypoint alias is visible in contexts of single-cardinality endpoints, as well as in nested entrypoints.
 
 ```javascript
 entrypoint Topic as topic {
@@ -96,91 +100,149 @@ entrypoint Topic as topic {
 }
 ```
 
-Aliases from the context can be referenced within `authorize` or `action` blocks.
-
----
-
 ## Fieldsets
 
-Fieldset is a collection of user inputs for a specific endpoint. This describes a JSON data structure an endpoint expects in a HTTP body.
+Fieldset is a collection of fields that describe a JSON data structure an endpoint expects as an input value. Since each Gaudi action has a target model it works with, Gaudi can automatically generate expected fieldsets for all the actions in an endpoint.
 
-Fieldsets are generated automatically based on endpoint actions and extra inputs. This means that Gaudi will go through all your actions, collect all the fields that they use and automatically generate schema of input required by your endpoint.
+Not all endpoints require a fieldset so Gaudi creates it only for those that do support it. Currently, it is created for: `create`, `update` and `custom` endpoints.
 
-If you need custom fields that do not corelate directly to the fields in target model, you can override some properties of your fields (eg. add default value) or even use `extra input`s to describe completely arbitrary fields.
+### Default inputs
 
-// TODO: describe inputs, extra inputs and sets
+Gaudi generates a fieldset from all fields of target model. For example, "create" endpoint contains a default "create" action and it works with `Org` model so it contains all of it's fields.
+
+```js
+model Org {
+  field name { type string }
+  field description { type string }
+}
+
+entrypoint Org {
+  create endpoint {}
+}
+
+// => valid JSON input
+// {
+//   "name": "string",
+//   "description": "string"
+// }
+```
+
+If an endpoint contains more than a default action, then a fieldset is constructed of all of their models. Fields of non-default actions are always namespaced in action's alias to avoid name collision between different models. that means that alias is required for all non-default actions.
+
+```js
+model Org {
+  field name { type string }
+  field description { type string }
+}
+
+model User {
+  field name { type string }
+  field email { type string }
+}
+
+entrypoint Org {
+  create endpoint {
+    action {
+      // default action
+      create {}
+      // additional action
+      // alias is required as it is used as a namespace in a fieldset
+      create User as user {}
+    }
+  }
+}
+
+// => valid JSON input
+// {
+//   "name": "string",
+//   "description": "string",
+//   "user": {
+//     "name": "string",
+//     "email": "string"
+//   }
+// }
+```
 
 ### Validation
 
-When your actions use target model's fields, Gaudi knows everything about them and can automatically generate model-level validations (eg. type validation, required fields, ...).
-
-Every `input` derived from `field` in `create`, `update` or `extra inputs` inherits the `validate` blocks specified within a field.
+Since your actions use target model's fields, Gaudi knows everything about them and automatically generates field validations (e.g. type validation, required fields, ...).
 
 ```javascript
-model Topic {
+model Org {
   field name { type string, validate { minLength(4) and maxLength(64) }}
+  field isPublic { type boolean }
+}
+
+// field "name" needs to be a string min 4 and max 64 characters long
+// field "isPublic" needs to be a boolean
+```
+
+Gaudi will ensure every input passes validation rules and will throw an error otherwise.
+
+### Extra inputs
+
+Gaudi can autogenerate fieldsets and validation based on target model's fields, but if you need input fields that do not corelate directly to target model, you can expand your fieldset using `extra input`s block. In this block you can define completely arbitrary fields regardless of your model. These extra fields can be used in manual inputs
+
+```js
+entrypoint Org {
+  create endpoint {
+    extra inputs {
+      field foo { type string, validate { minLength(4) } }
+    }
+    action {
+      // default action
+      create {}
+    }
+  }
+}
+
+// => valid JSON input
+// {
+//   "name": "string",
+//   "description": "string",
+//   "foo": "string"
+// }
+```
+
+or even use `extra input`s to describe completely arbitrary fields.
+
+### Manual fields
+
+Fieldsets describe what user input to an endpoint must look like since this is the data that action expects. If not specified otherwise, fieldset contains all of target model's fields and expects them in a user input.
+
+But sometimes, there are fields we do not want to take from user input directly or at all. To do that you can define a manual `setter` for those fields in your action.
+
+```js
+entrypoint Org {
+  create endpoint {
+    action {
+      create {
+        // force organizations to be created with "isPublic" field set to "true"
+        set isPublic true
+      }
+    }
+  }
 }
 ```
 
-Gaudi will ensure every `input` passes it's `field`'s validation rules.
+Since you're setting these fields yourself, they will not appear in fieldsets but will be injected by Gaudi before passing it to action.
 
-### Fieldset schema
+Here's another example of using extra fields for manual setters
 
-Inputs from `create` and `update` actions are namespaced with the action alias.
+```js
+entrypoint User {
+  create endpoint {
+    extra inputs {
+      field firstName { type string, validate { minLength(1) } } }
+      field lastName { type string, validate { minLength(1) } } }
+    }
 
-```javascript
-update org as newOrg {} // inputs are namespaced under "newOrg"
-```
-
-Inputs derived from `extra inputs` don't have a namespace.
-
-#### Create actions
-
-By default, a `field` belonging to a model of a target action will be included if:
-
-- it's not an `id` field
-- doesn't have `default` value
-- is not `set` within action block
-
-You can force a field with a `default` value by explicitly using the `input` directive:
-
-```javascript
-create as org {
-  input { status { required } }
-}
-```
-
-If the `required` keyword is ommited, this input will be optional, since it a default value is known.
-
-You can also explicitly set a default value for any input:
-
-```javascript
-create as org {
-  input { status { default true } }
-}
-```
-
-#### Update actions
-
-For security reasons, every updateable field must be explicitly specified:
-
-```javascript
-update as org {
-  input { status, name, logoUrl }
-}
-```
-
-With `update`, all inputs are optional, unless `required` is set. `default` is not supported in updade actions.
-
-#### Extra inputs
-
-Every `field` specified inside `extra inputs` goes into a root of the schema. It's required, unless `default` is provided.
-
-```javascript
-create endpoint {
-  extra inputs {
-    field passwordRepeat { type string }
-    field subscribedToNewsletter { type boolean, default false }
+    action {
+      create {
+        // construct "name" proprty from extra fist/last name properties
+        set name firstName + " " + lastName
+      }
+    }
   }
 }
 ```

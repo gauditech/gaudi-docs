@@ -30,7 +30,7 @@ Data resource entrypoint operates on. Top-level entrypoints must use data model 
 
 ##### `alias`
 
-Alias is used as a `context` name for single cardinality endpoints, ioq. endpoints that have a target (eg. `get` and `update` endpoints). Property is optional.
+Alias is used as a `context` name for single cardinality endpoints, ioq. endpoints that have a target (e.g. `get` and `update` endpoints). Property is optional.
 
 ### Syntax
 

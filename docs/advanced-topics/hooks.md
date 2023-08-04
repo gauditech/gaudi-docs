@@ -29,7 +29,7 @@ This may be databases or external APIs, for example:
 
 ```js
 model User {
-  field stripeId { type text }
+  field stripeId { type string }
   // highlight-start
   hook stripePaymentHistory {
     params {

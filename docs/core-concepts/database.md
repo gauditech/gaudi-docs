@@ -45,14 +45,14 @@ Applying "Dev" populator
 npx gaudi db populate -p Dev
 ```
 
-If you need more that one dataset, you can create different populators for different situations, eg.
+If you need more that one dataset, you can create different populators for different situations, e.g.
 
 - very few simple data for easier development,
 - very strict data format for testing
 - 1000s of real world but random data for UI testing or demoing to a client.
 - ...
 
-Moreover, populators are a part of Gaudi source code so when eg. changing git branches, you don't need to be aware of database structure changes nor the data required to prefill your datbase. Simply let Gaudi sync your model and data and you're up and running.
+Moreover, populators are a part of Gaudi source code so when e.g. changing git branches, you don't need to be aware of database structure changes nor the data required to prefill your datbase. Simply let Gaudi sync your model and data and you're up and running.
 
 #### Production
 

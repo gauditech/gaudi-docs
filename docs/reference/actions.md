@@ -88,7 +88,7 @@ query as updatedPosts {
 
 :::info
 
-If `select` atom is omitted from `query`, Gaudi will automatically return only properties actually used in subsequent actions but still consider it to be of target model type (eg. `Post`). Providing explicit `select` will turn this `alias` into a `struct` type.
+If `select` atom is omitted from `query`, Gaudi will automatically return only properties actually used in subsequent actions but still consider it to be of target model type (e.g. `Post`). Providing explicit `select` will turn this `alias` into a `struct` type.
 
 TODO: link to automatic deps collection and context typing
 
@@ -96,7 +96,7 @@ TODO: link to automatic deps collection and context typing
 
 ## Respond action
 
-Respond action can be used in custom endpoints for sending HTTP response. It uses data available in the context so you can use other action types (eg. `fetch`) to provide this data.
+Respond action can be used in custom endpoints for sending HTTP response. It uses data available in the context so you can use other action types (e.g. `fetch`) to provide this data.
 
 ### Syntax
 

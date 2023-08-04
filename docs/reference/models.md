@@ -50,7 +50,7 @@ field rating {
 
 ##### `dbname`
 
-Defines a name of a corresponding table column. Optional, defaults to lower-cased value of field's `name` property (eg. `"firstName"` property name will be converted to `"firstname"` dbname).
+Defines a name of a corresponding table column. Optional, defaults to lower-cased value of field's `name` property (e.g. `"firstName"` property name will be converted to `"firstname"` dbname).
 
 ```js
 field rating {
@@ -68,7 +68,7 @@ TODO: Learn more: [identify through, usage of "one"](data-modeling)
 
 ```js
 field name {
-  type text,
+  type string,
   // highlight-next-line
   unique
 }
@@ -106,7 +106,7 @@ Defines a validate expression. This is used to validate user-provided data durin
 
 ```js
 field slug {
-  type text,
+  type string,
   unique,
   // highlight-next-line
   validate { alphanumeric() and minLength(6) and not reservedSlug() }
@@ -204,9 +204,9 @@ model User {
 These point to a properties of a linked `reference`.
 The following parameters must match:
 
-- reference's parent model name must match relation's `from` property (eg. `Post`)
-- reference's `to` property must match relation's parent model name (eg. `User`)
-- reference's `name` property must match relation's `to` property (eg. `author`)
+- reference's parent model name must match relation's `from` property (e.g. `Post`)
+- reference's `to` property must match relation's parent model name (e.g. `User`)
+- reference's `name` property must match relation's `to` property (e.g. `author`)
 
 ```js
 model Post {
@@ -277,8 +277,8 @@ model User {
 
 ```js
 model Users {
-  field first_name { type text }
-  field last_name { type text }
+  field first_name { type string }
+  field last_name { type string }
   // highlight-next-line
   computed name_length { length (first_name + " " + last_name)}
 }
