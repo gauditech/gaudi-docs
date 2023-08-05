@@ -4,9 +4,9 @@ sidebar_position: 5
 
 # Hooks
 
-Declarative approach is excellent for many use-cases but every once in a while, we simply need to resort to some specific imperative code (e.g. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi hooks come in. They are the _"escape hatches"_ which allow you to use any JS custom code or library you need and run it inside Gaudi.
+Declarative approach is excellent for many use-cases but every once in a while, we simply need to resort to some specific imperative code (e.g. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi hooks come in. They are the _"escape hatches"_ which allow you to use any JS custom code or library you need and while still running it inside Gaudi.
 
-First, you need to defin a `runtime` which contains a path to your hooks folder.
+First, you need to define a `runtime` which contains a path to your hooks folder.
 
 ```javascript
 runtime MyJsRuntime {
@@ -15,27 +15,16 @@ runtime MyJsRuntime {
 ```
 
 :::info
-If you're using TypeScript, make sure to specify a path to compiled code, for example within `dist` directory.
+This folder is relative to current working directory so make sure you matches your runtime settings.
 :::
 
-Once a runtime is defined, you can write hooks.
+Once a runtime is defined, you can add some hooks.
 
-```javascript
-hook myModelHook {
-  // hook arguments
-  arg value1 41 // literal value arg
-  arg value2 newUser.name // context value arg
-
-  // target hook name and source
-  source runHook from "./examples.js"
-}
-```
-
-## Inline and external hooks
+## Hooks types
 
 You can write hooks in two different ways:
 
-- `inline`, typically a one-liners,
+- `inline`, typically a simple one-liners,
 - `source` referencing a function defined in your `runtime` directory.
 
 ### Inline hooks
@@ -63,7 +52,7 @@ hook {
 A function (in this case `getValue`) accepts context (varies based on hook type), and arguments passed:
 
 ```javascript
-export function getValue(ctx, args) {
+export function getValue(args) {
   // using lodash lib using "_" global var
   return _.identity(args.myValue);
 }
@@ -71,7 +60,7 @@ export function getValue(ctx, args) {
 
 Make sure to `export` the function.
 
-## Types of hooks
+## Hooks usage
 
 ### Model hook
 

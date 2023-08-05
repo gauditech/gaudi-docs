@@ -10,7 +10,7 @@ In order to run your new application, you must first build it using Gaudi compil
 
 The Gaudi compiler not only checks the syntax of source files but also performs a complete static analysis of your application. It verifies model names, fields, identifier types, expressions, queries, and much more. This step helps identify many potential problems and bugs as early as possible.
 
-If all checks pass without any issues, the Gaudi compiler will produce a _"definition"_ file, which essentially provides an abstract description of your application. This "definition" file serves as input for the Gaudi runtime, which ultimately runs your application.
+If all checks pass without issues, the Gaudi compiler will produce a _"definition"_ file, which essentially provides an abstract description of your application. This "definition" file serves as an input for the Gaudi runtime, which brings your application to life.
 
 To execute the Gaudi compiler, use Gaudi CLI in your project directory.
 

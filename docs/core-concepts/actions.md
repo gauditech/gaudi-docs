@@ -6,9 +6,9 @@ sidebar_position: 3
 
 ## About actions
 
-Actions are the real "units of work" in Gaudi. Both `entrypoint`s and `endpoint`s are basically just a context in which `action`s are executed. Actions are defined inside `endpoint` blocks. They are declarative, but their ordering matters, which also makes them somewhat imperative.
+Actions are the real "units of work" in Gaudi. Both `entrypoint`s and `endpoint`s basically just create a context in which `action`s are executed. Actions are defined inside endpoints and each endpoint can have one or more actions. They are declarative, but their ordering matters, which also makes them somewhat imperative.
 
-Gaudi supports several [types of action](#types-of-actions) which define the behavior of an endpoint. Each `endpoint` can contain one or more actions. Built-in endpoints (iow. all except `custom` endpoints), if not specified otherwise, contain one implicit action that matches their type. E.g. `create` endpoint contains `create` action etc. Custom endpoints contain no implicit actions so they require at least one explicite action.
+Gaudi supports several [types of action](../reference/actions) which define the behavior of an endpoint. Built-in endpoints (iow. all except `custom` endpoints), if not specified otherwise, contain an implicit action that matches their type. E.g. `create` endpoint contains `create` action etc. Custom endpoints contain no implicit actions so they require at least one explicite action.
 
 Endpoint actions syntax
 
@@ -24,20 +24,21 @@ create endpoint {
 // ...
 ```
 
-Each action requires a model it works on. By default, target model is optional and defaults to the current action's `entrypoint` target model. If you need to affect (e.g. create or update) other models in the same request, then `<target model>` can be used to indicate which model the action is targeting.
+Each action requires a model it works on. By default, target model is optional and defaults to the current action's `entrypoint` target model. If you need to work with other models (e.g. create, update, fetch, ...) in the same request, then `<target model>` can be used to indicate which model the action is targeting.
 
 Action can define an `alias` using `as` keyword. If the action returns a value (e.g. fetches, creates or updates a record), this value can later be accessed via that alias. More on aliases in [context](#context) section.
 
 Endpoint actions example
 
 ```js
-// works on "User" model
+// default target model in this entrypoint is "User"
 entrypoint User {
   update endpoint {
     // contains only implicit default action which updates all the fields on default "User" model
   }
 
   create endpoint {
+    // action block
     action {
       // default model action
       // create new "User" record and store it in context with alias "createUser"
