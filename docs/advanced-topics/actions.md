@@ -7,7 +7,7 @@ If you want to extend the default endpoint behavior (required for `custom` endpo
 ```javascript
 entrypoint Organization {
   create endpoint {
-    api {
+    action {
       // default `create` action for this endpoint
       create as org {}
       // assign current user as admin member of the org

@@ -88,8 +88,6 @@ Now that we've described our simple application, we're ready to run it. Since Ga
 npx gaudi build
 ```
 
-Gaudi compiler will go through your
-
 Read more on compiling Gaudi apps [here](../core-concepts/application).
 
 ### Run
@@ -100,7 +98,7 @@ Now we're ready to run our application. Again, we need a tool from Gaudi's toolk
 npx gaudi start
 ```
 
-Viola! We should have our database created and our endpoints ready to handle requests.
+Voila! We should have our database created and our endpoints ready to handle requests.
 
 But, our database is empty. Wouldn't it be great if we could populate our database automatically, without having to do it manually each time we recreate our database?
 

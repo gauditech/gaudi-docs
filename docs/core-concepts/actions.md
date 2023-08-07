@@ -10,7 +10,7 @@ Actions are the real "units of work" in Gaudi. Both `entrypoint`s and `endpoint`
 
 Gaudi supports several [types of action](../reference/actions) which define the behavior of an endpoint. Built-in endpoints (iow. all except `custom` endpoints), if not specified otherwise, contain an implicit action that matches their type. E.g. `create` endpoint contains `create` action etc. Custom endpoints contain no implicit actions so they require at least one explicite action.
 
-Endpoint actions syntax
+#### Endpoint actions syntax
 
 ```js
 // ...
@@ -28,7 +28,7 @@ Each action requires a model it works on. By default, target model is optional a
 
 Action can define an `alias` using `as` keyword. If the action returns a value (e.g. fetches, creates or updates a record), this value can later be accessed via that alias. More on aliases in [context](#context) section.
 
-Endpoint actions example
+#### Endpoint actions example
 
 ```js
 // default target model in this entrypoint is "User"
@@ -81,7 +81,7 @@ create UsernameChangelog {
 
 Each `entrypoint` can also specify an alias using `as` attribute. This alias will be used as a default alias for _target_, depending on the [endpoint type](./apis#identifying-specific-records).
 
-Nested entrypoints create nested context. Aliases created in parent xontexts are visible in child contexts. Shadowing of aliases in parent contexts is not allowed and an error will be thrown.
+Nested entrypoints create nested context. Aliases created in parent contexts are visible in child contexts. Shadowing of aliases in parent contexts is not allowed and an error will be thrown.
 
 An entrypoint alias is visible in contexts of single-cardinality endpoints, as well as in nested entrypoints.
 

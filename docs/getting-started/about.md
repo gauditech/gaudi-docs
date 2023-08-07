@@ -21,7 +21,7 @@ Most web application share similar structure. They have a database with some str
 
 Well, we've also been in this situation and that's why we've decided to build Gaudi, to solve this problem for us as well as for you. 🤛
 
-Gaudi is a declarative language that allows developers to "describe" an application in a declarative way without worrying about implementation details of the underlying technologies. It uses already known and well proven concepts like _models_, _queries_, _endpoints_, _CRUD_, ... so there is very little new mental concepts that you have adopt or change. We've just formalized this existing knowledge and made it a first-class citizen.
+Gaudi allows developers to "describe" an application in a declarative way without worrying about implementation details of the underlying technologies. It uses already known and well proven concepts like _models_, _queries_, _endpoints_, _CRUD_, ... so there is very little new mental concepts that you have adopt or change. We've just formalized this existing knowledge and made it a first-class citizen.
 
 Here is an example of a Gaudi application.
 
