@@ -207,7 +207,7 @@ entrypoint Org {
 
 or even use `extra input`s to describe completely arbitrary fields.
 
-### Manual fields
+### Manually setting field values
 
 Fieldsets describe what user input to an endpoint must look like since this is the data that action expects. If not specified otherwise, fieldset contains all of target model's fields and expects them in a user input.
 

@@ -9,7 +9,9 @@ slug: /
 
 Gaudi is an open source declarative domain specific language (_DSL_) and a backend development framework that makes it easier to build, run and maintain web applications.
 
-With Gaudi, you can write your data models and relations using intuitive, human-readable and database agnostic language. Whether you're just iterating your ideas, or switching between Git branches with completely different database models ... Gaudi will make sure your database is always in sync with current model and populated with appropriate data.
+With Gaudi, you can define your database schema using intuitive, human-readable language and database agnostic language and expand it with advanced modeling concepts.
+
+Gaudi is designed to keep you productive during development. Whether you're just iterating your ideas, or switching between Git branches with completely different database models, your database will automatically be kept in sync and populated with the appropriate data.
 
 You can expose your data as a simple CRUD REST endpoint with a single line of Gaudi code. Customize default CRUD behavior or go beyond CRUD and write completely custom endpoints using full declarativeness and type-safety of Gaudi or even custom code hooks.
 
