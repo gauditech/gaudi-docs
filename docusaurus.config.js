@@ -1,53 +1,53 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const lightCodeTheme = require("prism-react-renderer/themes/github");
+const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Gaudi documentation',
+  title: "Gaudi documentation",
   // tagline: 'Dinosaurs are cool',
-  favicon: 'img/favicon.ico',
+  favicon: "img/favicon.svg",
 
   // Set the production url of your site here
-  url: 'https://docs.gaudi.tech',
+  url: "https://docs.gaudi.tech",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'gaudi', // Usually your GitHub org/user name.
-  projectName: 'gaudi-docs', // Usually your repo name.
+  organizationName: "gaudi", // Usually your GitHub org/user name.
+  projectName: "gaudi-docs", // Usually your repo name.
 
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenLinks: "warn",
+  onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
   // to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: "en",
+    locales: ["en"],
   },
 
   presets: [
     [
-      'classic',
+      "classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
           routeBasePath: "/",
-          sidebarPath: require.resolve('./sidebars.js'),
+          sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           // editUrl:
-            // 'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          // 'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         blog: false,
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: require.resolve("./src/css/custom.css"),
         },
       }),
     ],
@@ -57,20 +57,20 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'Gaudi documentation',
+        title: "Gaudi",
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          alt: "Gaudi Logo",
+          src: "img/logo.svg",
+          href: "https://gaudi.tech",
         },
         items: [
-          {
-            type: 'docSidebar',
-            sidebarId: 'docsSidebar',
-            position: 'left',
-            label: 'Docs',
-          },
+          // {
+          //   type: "docSidebar",
+          //   sidebarId: "docsSidebar",
+          //   position: "left",
+          //   label: "Docs",
+          // },
           // {
           //   href: 'https://github.com/facebook/docusaurus',
           //   label: 'GitHub',
@@ -78,41 +78,58 @@ const config = {
           // },
         ],
       },
+      colorMode: {
+        defaultMode: "dark",
+        disableSwitch: false,
+        respectPrefersColorScheme: false,
+      },
       footer: {
-        style: 'dark',
+        style: "dark",
         links: [
           {
-            title: 'Docs',
+            title: "Docs",
             items: [
               {
-                label: 'Gaudi documentation',
-                to: '/',
+                label: "Getting started",
+                to: "/",
+              },
+              {
+                label: "Core concepts",
+                to: "/core-concepts",
+              },
+              {
+                label: "Advanced topics",
+                to: "/advanced-topics",
+              },
+              {
+                label: "Reference",
+                to: "/reference",
               },
             ],
           },
           {
-            title: 'Community',
+            title: "Community",
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/gaudi',
+                label: "Stack Overflow",
+                href: "https://stackoverflow.com/questions/tagged/gaudi",
               },
               {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/gaudi',
+                label: "Discord",
+                href: "https://discordapp.com/invite/gaudi",
               },
               {
-                label: 'Twitter',
-                href: 'https://twitter.com/gaudi',
+                label: "Twitter",
+                href: "https://twitter.com/gaudi",
               },
             ],
           },
           {
-            title: 'More',
+            title: "More",
             items: [
               {
-                label: 'Gaudi on GitHub',
-                href: 'https://github.com/gauditech/gaudi',
+                label: "Gaudi on GitHub",
+                href: "https://github.com/gauditech/gaudi",
               },
             ],
           },
