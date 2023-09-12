@@ -63,6 +63,7 @@ const config = {
           alt: "Gaudi Logo",
           src: "img/logo.svg",
           href: "https://gaudi.tech",
+          target: "_self",
         },
         items: [
           // {
