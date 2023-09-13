@@ -1,17 +1,15 @@
 ---
 sidebar_position: 1
-slug: /core-concepts
+slug: /core-concepts/models
 ---
 
 # Models
 
-Gaudi provides a powerful data modeling language. You can describe your data models and relations using intuitive, human-readable and database agnostic language.
-
-Modeling language consists of 2 core concepts: **model** and **fields**.
+Gaudi provides a powerful data modeling language. You can describe your data structure and relationships using intuitive, human-readable and database agnostic language.
 
 ## Model
 
-Model is a named group of fields which typically corresponds to a database table.
+Model is a named group of properties which typically corresponds to a database table.
 
 ```
 model User {
@@ -19,15 +17,11 @@ model User {
 }
 ```
 
-## Fields
+## Field
 
-In general, fields are properties of a model and can be divided in 4 types:
+Fields are properties of a model that correspond to columns in database tables.
 
-### `field`
-
-Basic fields are properties of a model that correspond to columns in database tables.
-
-Fields can have only primitive values and can have data validation properties (e.g. `nullable`, `required`, custom validations)
+Fields can store only primitive values and can have data validation properties (e.g. `nullable`, `required`, `validate`)
 
 ```js
 model Organization {
@@ -36,7 +30,7 @@ model Organization {
 }
 ```
 
-### `reference` and `relation`
+## Reference and relation
 
 References and relations are properties that describe relationships between models. Relationships allow you to traverse your data model and implicitly apply parent-child filters when querying your data. They can be used to fetch but also to modify related data when reading or modifying data in database, respectively.
 
@@ -54,7 +48,7 @@ model Owner {
 }
 ```
 
-### `query` and `computed`
+## Query
 
 Queries are properties written in Gaudi's query language and can be used to additionaly query current model's relationships or other models. They can be used to build custom relationships between models which provide additional semantics not reflected in the database schema, but that exists in a business domain.
 
@@ -67,20 +61,25 @@ model Organization {
 }
 ```
 
+## Computed
+
 Similarly, `computed` properties are written using Gaudi's expression but can resolve only to primitive values (`field`-like), but are calculated on-the-fly and are not persisted in the database.
 
-Computed properties can use any model field, including queries, to calculate a new value.
+Computed properties can use any model property to calculate a new value, as long as it results in a primitive value.
 
 ```js
 model Organization {
   // calculate computed properties on the fly
-  computed summary { "Organization " + name + " has " + count(announcements) + " announcements" }
+  computed summary { "Organization " + name + " has " +
+                    count(announcements) + " announcements" }
 }
 ```
 
-Both `query` and `computed` properties are also available in query expressions (`filter`, `order by`).
+:::tip
+`computed` properties can be used in query expressions (`filter`, `order by`).
+:::
 
-### `hook`
+## Hook
 
 Hooks are properties that can be used to enrich data models with data that cannot be calculated in a database, or are not supported natively via Gaudi language. They execute custom code and store results in the data model.
 

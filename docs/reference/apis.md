@@ -20,40 +20,48 @@ api {
 
 ## Entrypoint
 
-Entrypoint is a group of endpoints which operate on the same data model. Several `entrypoint`s can be grouped into an `api` block.
+Entrypoint is a group of endpoints which operate on the same collection of records. Several `entrypoint`s can be grouped into an `api` block.
 
 ### Properties
 
 ##### `resource`
 
-Data resource entrypoint operates on. Top-level entrypoints must use data model as their resource. Property is **required**.
+Related data collection an entrypoint operates on. Top-level entrypoints must use a model as their resource. Nested entrypoints can target `reference` or `relation` relationships. Property is **required**.
 
 ##### `alias`
 
-Alias is used as a `context` name for single cardinality endpoints, ioq. endpoints that have a target (e.g. `get` and `update` endpoints). Property is optional.
+Alias is used as a `context` name for single cardinality endpoints (e.g. `get` and `update` endpoints). Property is **optional**.
 
 ### Syntax
 
 ```js
 entrypoint <resource> [as <alias>] {
-  // ... atoms
+  // ... properties
   // ... endpoints
 }
 ```
 
 ## Identify
 
-Use another model property for matching target record.
+Specify which field to use to match a single record in the collection an entrypoint is operating on. In runtime, the value comes from the URL parameter.
 
 ### Properties
 
-##### `field`
+##### `path`
 
-Model field used for matching.
+An identifier path. It can be a field or a relationship path which ends a field, and it must be `unique`.
 
 ```js
 entrypoint Repo {
-  identify { through <field name> }
+  identify { through <path> }
+}
+
+// examples
+entrypoint Repo {
+  identify { through slug }
+}
+entrypoint User {
+  identify { through profile.email }
 }
 ```
 

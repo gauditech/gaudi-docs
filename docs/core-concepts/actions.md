@@ -8,7 +8,7 @@ sidebar_position: 3
 
 Actions are the real "units of work" in Gaudi. Both `entrypoint`s and `endpoint`s basically just create a context in which `action`s are executed. Actions are defined inside endpoints and each endpoint can have one or more actions. They are declarative, but their ordering matters, which also makes them somewhat imperative.
 
-Gaudi supports several [types of action](../reference/actions) which define the behavior of an endpoint. Built-in endpoints (iow. all except `custom` endpoints), if not specified otherwise, contain an implicit action that matches their type. E.g. `create` endpoint contains `create` action etc. Custom endpoints contain no implicit actions so they require at least one explicite action.
+Gaudi supports several [types of actions](../reference/actions) which define the behavior of an endpoint. CRUD endpoints (all except `custom` endpoints), if not specified otherwise, contain an implicit action that matches their type. E.g. `create` endpoint contains `create` action etc. Custom endpoints contain no implicit actions so they require at least one explicite action.
 
 #### Endpoint actions syntax
 
@@ -55,11 +55,9 @@ entrypoint User {
 // ...
 ```
 
-## Context
+## Context and aliases
 
-Actions usually need some data to work with; they receive some data on the input and return some data on the output. This data comes from action's _"context"_. Context is an environment created by action's parent `entrypoint` and `endpoint`. It is something like a namespace or a map that can store and return values. It is used to stored data required and provided by actions, such as URL parameters, input body and outputs from previous actions.
-
-### Context and aliases
+Actions usually need some data to work with; they may receive it from the client or read it from the database. This data is called action's _"context"_. Actions can access data already stored in the context.
 
 If an action returns a result, that result is stored in the context, and is available to subsequent actions. If an action defines an alias, result is stored and can be accessed by the name defined by the alias. Aliases stored in the context are immutable and cannot be overwritten by the subsequent actions.
 
@@ -79,7 +77,7 @@ create UsernameChangelog {
 }
 ```
 
-Each `entrypoint` can also specify an alias using `as` attribute. This alias will be used as a default alias for _target_, depending on the [endpoint type](./apis#identifying-specific-records).
+Each `entrypoint` can also specify an alias using `as` attribute.
 
 Nested entrypoints create nested context. Aliases created in parent contexts are visible in child contexts. Shadowing of aliases in parent contexts is not allowed and an error will be thrown.
 

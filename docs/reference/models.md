@@ -1,13 +1,13 @@
 ---
 sidebar_position: 1
-slug: /reference
+slug: /reference/models
 ---
 
 # Models
 
 ## Models
 
-Model is a named group of fields which typically corresponds to a database table. It consists of a name and a list of fields.
+Model is a named group of fields which corresponds to a database table. It consists of a name and a list of fields.
 
 ### Syntax
 
@@ -280,6 +280,72 @@ model Users {
   field first_name { type string }
   field last_name { type string }
   // highlight-next-line
-  computed name_length { length (first_name + " " + last_name)}
+  computed name_length { length(first_name + " " + last_name) }
+}
+```
+
+## Hooks
+
+Model hooks can be used to augment a record with data provided by custom code.
+
+### Properties
+
+#### `arg`
+
+Passes a value to a hook context. It can be an expression or a query. If query omits `from`, it is sourced from the current record. This can be used to pass specific record fields to a hook.
+
+:::tip
+Check out [advanced data selection](./actions.md#advanced-data-selection) guide to learn how to pass more complex data structures!
+:::
+
+##### Examples
+
+```js
+model User {
+  field name { type string }
+  hook uppercaseName {
+    // query argument
+    // highlight-next-line
+    arg user query { select { name } }
+    // expression arguments
+    // highlight-next-line
+    arg prefix "Name: "
+    // highlight-next-line
+    arg currentTime now()
+    inline "prefix + user.name.toUpperCase() + ' at: ' + stringify(currentTime)"
+  }
+}
+```
+
+#### `inline`
+
+Defines an inline Javascript expression that has access to data defined with `arg`. Cannot be used together with `source`.
+
+See the example above.
+
+#### `source`
+
+Defines a function which will be called with provided arguments. Function accepts a single argument which is a map of values.
+
+##### Example
+
+```js
+model User {
+  field name { type string }
+  hook uppercaseName {
+    arg user query { select { name } }
+    arg prefix ", msc."
+    // highlight-next-line
+    source makeUpper from "hooks/strings.js"
+  }
+}
+```
+
+```js
+// in strings.js
+module.exports = {
+  makeUpper: function (args) {
+    return args.user.name + " " + args.prefix;
+  }
 }
 ```

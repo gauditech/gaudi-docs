@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Hooks
 
-Declarative approach is excellent for many use-cases but every once in a while, we simply need to resort to some specific imperative code (e.g. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi hooks come in. They are the _"escape hatches"_ which allow you to use any JS custom code or library you need and while still running it inside Gaudi.
+Declarative approach is excellent for many use-cases but every once in a while, we simply need to resort to custom imperative code (e.g. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi hooks come in. They are the _"escape hatches"_ which allow you to use any JS custom code or library you need and while still running it inside Gaudi.
 
 First, you need to define a `runtime` which contains a path to your hooks folder.
 
@@ -24,7 +24,7 @@ Once a runtime is defined, you can add some hooks.
 
 You can write hooks in two different ways:
 
-- `inline`, typically a simple one-liners,
+- `inline` - typically, simple one-liners,
 - `source` referencing a function defined in your `runtime` directory.
 
 ### Inline hooks
@@ -92,7 +92,7 @@ create as org {
 
 ### Execute hook
 
-Execute hook has access to `request` and `response` objects, and is one of the supported actions.
+Execute hook has context with access to  `request` and `response` objects. It can be used within endpoint `action` block.
 
 ```javascript
 action {

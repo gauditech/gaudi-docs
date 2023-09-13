@@ -15,7 +15,7 @@ If all checks pass without issues, the Gaudi compiler will produce a _"definitio
 To execute the Gaudi compiler, use Gaudi CLI in your project directory.
 
 ```sh
-npx gaudi-compiler
+npx gaudi build
 ```
 
 ## Running
@@ -29,7 +29,7 @@ Gaudi can be run as a standalone server or be integrated into an existing Node.j
 Gaudi comes with an embedded `express` server and if you're developing a pure Gaudi application, you can simply start your application via the CLI.
 
 ```sh
-gaudi start
+npx gaudi start
 ```
 
 ### Embedded Gaudi

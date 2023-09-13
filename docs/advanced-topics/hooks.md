@@ -32,9 +32,7 @@ model User {
   field stripeId { type string }
   // highlight-start
   hook stripePaymentHistory {
-    params {
-      user: query { select { id, stripeId } }
-    }
+      arg user query { select { id, stripeId } }
     // define your custom logic here
     source fetchUserPaymentHistory from "./hooks/stripe.js"
   }
@@ -46,7 +44,7 @@ Gaudi will invoke the `fetchUserPaymentHistory` only when needed. You can read m
 
 ---
 
-// TODO: describe multiple and defualt runtimes
+### Multiple runtimes
 
 Typically, you'll have only one runtime. In case you define multiple, you either should mark one of them `default`, otherwise you'll have to specify which runtime to use:
 
