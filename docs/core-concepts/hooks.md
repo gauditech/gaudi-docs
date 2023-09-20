@@ -92,7 +92,7 @@ create as org {
 
 ### Execute hook
 
-Execute hook has context with access to  `request` and `response` objects. It can be used within endpoint `action` block.
+Execute hook has a context with an access to  `request` and `response` objects. It can be used within endpoint `action` block.
 
 ```javascript
 action {

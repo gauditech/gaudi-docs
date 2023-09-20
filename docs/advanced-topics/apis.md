@@ -47,3 +47,20 @@ response { id, title, author { name } }
 :::tip
 `response` supports much more than that! Check out [advanced data selection](./actions.md#advanced-data-selection) guide!
 :::
+
+## Nested entrypoints
+
+Entrypoints can be nested.
+
+```js
+api {
+  entrypoint Post as p {
+    entrypoint comments as com {
+      // PATCH /post/:post_id/comments/:comment_id
+      update endpoint {}
+      // POST /post/:post_id/comments/
+      create endpoint {}
+    }
+  }
+}
+```

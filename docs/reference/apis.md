@@ -26,7 +26,7 @@ Entrypoint is a group of endpoints which operate on the same collection of recor
 
 ##### `resource`
 
-Related data collection an entrypoint operates on. Top-level entrypoints must use a model as their resource. Nested entrypoints can target `reference` or `relation` relationships. Property is **required**.
+A collection fo records an entrypoint operates on. Top-level entrypoints must use a model as their resource. Nested entrypoints can target `reference` or `relation` relationships. Property is **required**.
 
 ##### `alias`
 
@@ -218,4 +218,20 @@ URL syntax
 
 ```
 DELETE /api/<resource name>/<identifier>
+```
+
+## Extra inputs
+
+Endpoint can specify extra inputs which are available in the context.
+
+#### Syntax
+
+```js
+custom enpdoint {
+  extra inputs {
+    field <name1> { type <type1> } // accepts default & validate
+    ...
+    field <nameN> { type <typeN> }
+  }
+}
 ```

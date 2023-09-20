@@ -13,9 +13,11 @@ Model is a named group of properties which typically corresponds to a database t
 
 ```
 model User {
-  // ... fields
+  // ... properties
 }
 ```
+
+Model can specify a couple of different kinds of properties: `field`, `reference`, `relation`, `computed`, `query` and `hook`. These properties can be referenced in other parts of the code.
 
 ## Field
 

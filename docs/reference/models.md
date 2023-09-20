@@ -170,7 +170,7 @@ reference organization {
 
 Relation defines an opposite side of a `reference`. A `reference` should have **exactly one** corresponding relation.
 
-Example:
+#### Examples
 
 ```js
 model User {
@@ -327,7 +327,7 @@ See the example above.
 
 Defines a function which will be called with provided arguments. Function accepts a single argument which is a map of values.
 
-##### Example
+##### Examples
 
 ```js
 model User {

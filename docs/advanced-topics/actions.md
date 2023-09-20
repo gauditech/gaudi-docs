@@ -24,12 +24,38 @@ entrypoint Organization {
 
 Create and update actions are similar in structure, they support the same properties:
 - `input`, which defines a value that should be provided by the client via HTTP body
-- `reference`, similar to input, but referencing another record via a value that uniquely identifies it; it can only be used on `reference` properties
+- `reference-through`, similar to input, but referencing another record via a value that uniquely identifies it; it can only be used on model's `reference` properties
 - `set`, a server-side provided value
 
-#### `reference` vs `input`
+### Targeting model's `reference` properties
 
-Each `reference` property has a corresponding `field`, appending a `_id` to its name; for example, `reference user` results in an implicit `field user_id { type number }`. You can only provide one or another - not both.
+Only two kinds of model properties are persisted to the database: `field` an a `reference`. Internally, a `reference` is represented as a `field` as well - appending the `"_id"` to it's name, as shown in the following example:
+
+```js
+model Post {
+  reference author { to User }
+  computed implicitAuthorId {
+    // highlight-start
+    // this exists!
+    author_id
+    // highlight-end
+  }
+}
+```
+
+Therefore, a `reference` property can be represented in the action properties in two ways - directly via `reference`, or via corresponding `field`. You can only provide one or another - not both.
+
+Let's see some examples to further clarify this behavior:
+
+```js
+update parentPost as updated {
+  // four different ways to specify an action property targeting a reference
+  input { author_id }
+  reference author { through id }
+  set author_id parentPost.author_id
+  set author parentPost.author
+}
+```
 
 ### Create action
 
@@ -107,19 +133,22 @@ update org as newOrg {
 
 ## Advanced data selection
 
-There are a few areas where you can instruct Gaudi to select specific subset of data when performing database `SELECT` queries.
+When querying data, you can list which model properties you want your query to return. This does not constrain you only to direct model properties but works also on nested relationships.
 
 This can be used when defining the following:
 - in model hooks, `arg <name> query { ... }`
 - in entrypoints and endpoints, a `response` property
 - in `query` action, a `select` property
 
-You can select anything 
 
 Let's start with a simple example:
 
 ```
-select { name, description }
+query as result {
+  from Org,
+  // highlight-next-line
+  select { name, description }
+}
 ```
 
 
@@ -149,7 +178,7 @@ select { name, externalScore, computedScore }
 
 ### Custom expressions
 
-You can select custom expressions as well!
+You can even select ad-hoc properties using custom expressions!
 
 ```
 select {

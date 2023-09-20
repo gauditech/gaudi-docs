@@ -57,7 +57,7 @@ Gaudi models support advanced relationship modeling techniques using `computed`,
 
 ### Expose an API
 
-Now that we have our models, we need to expose an underlying data to our clients and users, in other words - we need to create an API.
+Now that we have our models, we need to expose the underlying data to our clients and users; in other words, we need to create an API.
 
 Gaudi uses a concept of `entrypoint`s which represent a group of endpoints and operations on a single resource, e.g. a model or a relation.
 

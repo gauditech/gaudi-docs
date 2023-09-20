@@ -16,7 +16,7 @@ action {
 }
 ```
 
-## Create / update action
+## Create and update actions
 
 Create action creates a new record in a **collection**. Update action updates values of a **single** record.
 
@@ -47,16 +47,17 @@ update newOrg as newerOrg {
 
 
 
-### Action properties
+### Properties
 
-#### Input
+#### `input`
 
-##### Input properties
+##### Properties
 
 - `default`: provides a default expression which will be stored if client hasn't provided a value (thus, marking an `input` as *optional*)
 - `requried`: marking an `input` as *required*, validating that the value is provided by client (useful in update action in which all inputs are optional by default)
 
-##### Examples & syntax
+
+#### Examples
 
 ```js
 update myOrg as newOrg {
@@ -65,19 +66,34 @@ update myOrg as newOrg {
 
 create Org as newOrg {
   // "name" is implicitly an input
-  input { description { default "Description of " + name } }
+  input {
+    description { default "Description of " + name }
+  }
 }
 
 update org as newOrg {
-  input { name { required }, description } // name is required, description is optional
+  input {
+    name { required },
+    description
+  } // name is required, description is optional
 }
 ```
 
-#### Set
+:::tip
+You can use `input *` to list all the fields in a resource.
+:::
+
+#### `set`
 
 Set defines a server-side expression which will be executed when action triggers.
 
-##### Examples
+##### Syntax
+
+```js
+set <field name> <expression>
+```
+
+#### Examples
 
 ```js
 set name "My name"
@@ -85,11 +101,21 @@ set currentTs now()
 set description "Created at " + stringify(currentTs)
 ```
 
-#### Reference
+#### `reference-through`
 
-Reference can be used to replace `input` on a field created by a model `reference`. It defines a path that can uniquely identify a referencing record by a value provided by clients.
+`reference-through` can be used on model's `reference` properties. It defines a path that can uniquely identify a referencing record by a value provided by clients.
 
-##### Examples
+#### Syntax
+
+```js
+reference <reference name> { through <identifier path> }
+```
+
+:::tip
+We use `reference-through` to describe an action "reference" property, to easily differentiate from `reference`, a model property.
+:::
+
+#### Examples
 
 ```js
 model User {
@@ -147,9 +173,10 @@ validate with key "description" {
 
 ## Query action
 
-Query actions can be used to run arbitrary queries in order to fetch the data (to be used in subsequent actions via `alias`) or to make changes on existing data.
+Query actions can be used to run arbitrary queries in order to fetch the data or to make changes on existing data. Affected data can be stored in the context with `alias`, so it can be referenced in the following actions.
 
 Action supports `select`, `update` and `delete` properties.
+
 
 ### Syntax
 
@@ -220,14 +247,14 @@ respond {
 
 ## Execute action
 
-Execute actions allow you to run custom javascript code via `hook`, and stores the result in the context.
+`execute` actions allow execution of custom javascript code using `hook`. The result of this custom code can be stored in the context using action alias and used in later actions.
 
 ### Syntax
 
 ```js
 execute as <alias> {
   hook {
-    // hook atoms
+    // hook properties
   }
 }
 ```
@@ -243,7 +270,7 @@ execute as rating {
 }
 ```
 
-# Action atoms
+# Properties
 
 ## Input
 
@@ -286,7 +313,7 @@ create org.memberships {
 }
 ```
 
-## Set
+## `set`
 
 Set is used to manually set field value and omit them from input schema. This value can be any valid expression or a `hook` that resolve to primitive value.
 
