@@ -23,6 +23,7 @@ entrypoint Organization {
 ## Behavior of create and update actions
 
 Create and update actions are similar in structure, they support the same properties:
+
 - `input`, which defines a value that should be provided by the client via HTTP body
 - `reference-through`, similar to input, but referencing another record via a value that uniquely identifies it; it can only be used on model's `reference` properties
 - `set`, a server-side provided value
@@ -84,7 +85,7 @@ create Org as org {
 
 ##### Optional inputs
 
-Instead, you can turn *location* into an optional input with a default:
+Instead, you can turn _location_ into an optional input with a default:
 
 ```js
 create Org as org {
@@ -92,11 +93,11 @@ create Org as org {
 }
 ```
 
-In this case, *name* is a required input, and *location* is optional, with a default.
+In this case, _name_ is a required input, and _location_ is optional, with a default.
 
 ### Update action
 
-Update action operates on a single record - it can target a context *alias*, or a related record.
+Update action operates on a single record - it can target a context _alias_, or a related record.
 
 Update action supports the same properties as create, with some behavioral differences:
 
@@ -108,12 +109,14 @@ Update action supports the same properties as create, with some behavioral diffe
 ##### Targeting resources
 
 The following are allowed:
+
 ```js
 update org as newOrg {...}
 update org.profile as newProfile {...} // `profile` is a reference or a relation into a `unique` reference
 ```
 
 The following are not allowed because it targets a collection of records:
+
 ```js
 update Org as orgs {...}
 update org.repos as repos {...}
@@ -136,21 +139,20 @@ update org as newOrg {
 When querying data, you can list which model properties you want your query to return. This does not constrain you only to direct model properties but works also on nested relationships.
 
 This can be used when defining the following:
+
 - in model hooks, `arg <name> query { ... }`
 - in entrypoints and endpoints, a `response` property
 - in `query` action, a `select` property
 
-
 Let's start with a simple example:
 
-```
+```js
 query as result {
   from Org,
   // highlight-next-line
   select { name, description }
 }
 ```
-
 
 ### Selecting nested relationships
 

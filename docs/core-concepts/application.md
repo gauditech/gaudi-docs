@@ -20,7 +20,7 @@ npx gaudi build
 
 ## Running
 
-Gaudi runtime is a Node.js based backend runtime that takes a _"definition"_ file produced by the Gaudi compiler and starts your application.
+Gaudi runtime is a Node.js based backend runtime that takes a _"definition"_ file produced by the Gaudi compiler and runs your application.
 
 Gaudi can be run as a standalone server or be integrated into an existing Node.js application. Currently, Gaudi supports [express](https://expressjs.com/) web server.
 
@@ -34,7 +34,7 @@ npx gaudi start
 
 ### Embedded Gaudi
 
-If you're already developing your Node.js aplication and want to embed Gaudi and develop other parts of your application within it you can use `useGaudi` express middleware provided by the `gaudi` package
+If you're already developing your Node.js application and want to embed Gaudi and develop other parts of your application within it you can use `useGaudi` express middleware provided by the `gaudi` package
 
 ```js
 import { useGaudi } from "@gaudi/runtime/dist/server/express";
@@ -51,3 +51,7 @@ app.listen(3001, "localhost", () => {
   console.log(`Gaudi app is started ...`);
 });
 ```
+
+### Database access
+
+Application needs a database connection in order to run. Database access is configured as an environment variable `GAUDI_DATABASE_URL` located in `.env` so make sure this matches your database configuration.

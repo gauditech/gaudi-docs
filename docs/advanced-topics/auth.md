@@ -1,7 +1,5 @@
 # Auth
 
-There is a special context alias - `@auth`, that contains a record of a currently logged-in user.
-
 ## Authentication
 
 Gaudi supports authentication plugins which let you define authorization methods. Currently, only "basic" method exists.
@@ -11,6 +9,8 @@ auth {
   method basic {}
 }
 ```
+
+Gaudi injects a special context alias - `@auth`, that contains a record of a currently logged-in user.
 
 ## Authorization
 

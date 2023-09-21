@@ -7,9 +7,7 @@ slug: /reference/models
 
 ## Models
 
-Model is a named group of fields which corresponds to a database table. It consists of a name and a list of fields.
-
-### Syntax
+Model is a named group of fields which correspond to a database table. It consists of a name and a list of fields.
 
 ```js
 model User {
@@ -62,9 +60,9 @@ field rating {
 ##### `unique`
 
 Marks a field as unique. This will create a unique constraint on the field in the database.
-TODO: `unique` propery also affects a compiler type checking in certain scenarios.
+TODO: `unique` property also affects a compiler type checking in certain scenarios.
 
-TODO: Learn more: [identify through, usage of "one"](data-modeling)
+TODO: Learn more: [identify through, usage of "one"](../advanced-topics/actions.md#behavior-of-create-and-update-actions)
 
 ```js
 field name {
@@ -295,7 +293,7 @@ Model hooks can be used to augment a record with data provided by custom code.
 Passes a value to a hook context. It can be an expression or a query. If query omits `from`, it is sourced from the current record. This can be used to pass specific record fields to a hook.
 
 :::tip
-Check out [advanced data selection](./actions.md#advanced-data-selection) guide to learn how to pass more complex data structures!
+Check out [advanced data selection](../advanced-topics/actions.md#advanced-data-selection) guide to learn how to pass more complex data structures!
 :::
 
 ##### Examples
@@ -346,6 +344,6 @@ model User {
 module.exports = {
   makeUpper: function (args) {
     return args.user.name + " " + args.prefix;
-  }
-}
+  },
+};
 ```

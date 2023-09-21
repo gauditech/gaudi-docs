@@ -52,12 +52,12 @@ model Owner {
 
 ## Query
 
-Queries are properties written in Gaudi's query language and can be used to additionaly query current model's relationships or other models. They can be used to build custom relationships between models which provide additional semantics not reflected in the database schema, but that exists in a business domain.
+Queries are properties written in Gaudi's query language and can be used to additionally query current model's relationships or other models. They can be used to build custom relationships between models which provide additional semantics not reflected in the database schema, but that exists in a business domain.
 
 ```js
 model Organization {
   // returns 5 latest announcements
-  query recent_anonuncements {
+  query recent_announcements {
     from announcements, order by { created_at desc }, limit 5
   }
 }
@@ -109,7 +109,7 @@ model Organization {
 
   // query through data relationships
   // returns 5 latest announcements
-  query recent_anonuncements {
+  query recent_announcements {
     from announcements, order by { created_at desc }, limit 5
   }
 

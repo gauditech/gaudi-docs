@@ -16,8 +16,6 @@ api {
 }
 ```
 
----
-
 ## Entrypoint
 
 Entrypoint is a group of endpoints which operate on the same collection of records. Several `entrypoint`s can be grouped into an `api` block.
@@ -26,7 +24,7 @@ Entrypoint is a group of endpoints which operate on the same collection of recor
 
 ##### `resource`
 
-A collection fo records an entrypoint operates on. Top-level entrypoints must use a model as their resource. Nested entrypoints can target `reference` or `relation` relationships. Property is **required**.
+A collection of records an entrypoint operates on. Top-level entrypoints must use a model as their resource. Nested entrypoints can target `reference` or `relation` relationships. Property is **required**.
 
 ##### `alias`
 
@@ -67,7 +65,7 @@ entrypoint User {
 
 ## Response
 
-Defined record fields that will be returned by build-in actions.
+Defines record properties that will be returned by build-in actions.
 
 ### Syntax
 
@@ -83,8 +81,6 @@ entrypoint Repo {
 }
 
 ```
-
----
 
 ## Get endpoint
 
@@ -132,7 +128,7 @@ Uses `PATCH` HTTP method.
 
 ##### `alias`
 
-Alias is used as a name in `context` for updated record. Propety is optional.
+Alias is used as a name in `context` for updated record. Property is optional.
 
 ##### Syntax
 
@@ -156,7 +152,7 @@ Uses `POST` HTTP method.
 
 ##### `alias`
 
-Alias is used as a name in `context` for newly created record. Propety is optional.
+Alias is used as a name in `context` for newly created record. Property is optional.
 
 ##### Syntax
 
@@ -196,7 +192,7 @@ Endpoint HTTP method.
 
 URL fragment under which endpoint wil be registered.
 
-Any URL-unsafe characters will be encoded, even `/`, so sibpaths are not supported.
+Any URL-unsafe characters will be encoded, even `/`, so sub paths are not supported.
 
 ##### `cardinality`
 

@@ -106,7 +106,7 @@ Name of a migration to be created **[required]**
 
 ### db deploy
 
-Deploy yet undeployed migrations to target database
+Deploy new migrations to target database
 
 ```sh
 gaudi db deploy [root]

@@ -22,7 +22,6 @@ Create action creates a new record in a **collection**. Update action updates va
 
 Create and update action support `input`, `reference` or `set` properties.
 
-
 ### Syntax
 
 ```javascript
@@ -45,17 +44,14 @@ update newOrg as newerOrg {
 }
 ```
 
-
-
 ### Properties
 
 #### `input`
 
 ##### Properties
 
-- `default`: provides a default expression which will be stored if client hasn't provided a value (thus, marking an `input` as *optional*)
-- `requried`: marking an `input` as *required*, validating that the value is provided by client (useful in update action in which all inputs are optional by default)
-
+- `default`: provides a default expression which will be stored if client hasn't provided a value (thus, marking an `input` as _optional_)
+- `requried`: marking an `input` as _required_, validating that the value is provided by client (useful in update action in which all inputs are optional by default)
 
 #### Examples
 
@@ -177,7 +173,6 @@ Query actions can be used to run arbitrary queries in order to fetch the data or
 
 Action supports `select`, `update` and `delete` properties.
 
-
 ### Syntax
 
 ```js
@@ -280,7 +275,7 @@ Input is used to include target model property in an input schema and/or to over
 
 #### `optional`
 
-Makes input field optional and ommits it from action if not provided in input.
+Makes input field optional and omits it from action if not provided in input.
 
 ### Syntax
 

@@ -6,7 +6,7 @@ sidebar_position: 3
 
 ## About actions
 
-Actions are the real "units of work" in Gaudi. Both `entrypoint`s and `endpoint`s basically just create a context in which `action`s are executed. Actions are defined inside endpoints and each endpoint can have one or more actions. They are declarative, but their ordering matters, which also makes them somewhat imperative.
+Actions are the real _"units of work"_ in Gaudi. Both `entrypoint`s and `endpoint`s basically just create a context in which `action`s are executed. Actions are defined inside endpoints and each endpoint can have one or more actions. They are declarative, but their ordering matters, which also makes them somewhat imperative.
 
 Gaudi supports several [types of actions](../reference/actions) which define the behavior of an endpoint. CRUD endpoints (all except `custom` endpoints), if not specified otherwise, contain an implicit action that matches their type. E.g. `create` endpoint contains `create` action etc. Custom endpoints contain no implicit actions so they require at least one explicit action.
 
@@ -19,14 +19,15 @@ create endpoint {
     create <target model> <as [alias]> {
       // action body
     }
+    // ... other actions
   }
 }
 // ...
 ```
 
-Each action requires a model it works on. By default, target model is optional and defaults to the current action's `entrypoint` target model. If you need to work with other models (e.g. create, update, fetch, ...) in the same request, then `<target model>` can be used to indicate which model the action is targeting.
+Each action requires a model it works on. Target model is optional and defaults to the current action's `entrypoint` target model. If you need to work with other models (e.g. create, update, fetch, ...) in the same request, then `<target model>` can be used to indicate which model the action is working on.
 
-Action can define an `alias` using `as` keyword. If the action returns a value (e.g. fetches, creates or updates a record), this value can later be accessed via that alias. More on aliases in [context](#context) section.
+Action can define an `alias` using `as` keyword. If the action returns a value (e.g. fetches, creates or updates a record), this value can later be accessed via that alias. More on aliases in [context](#context-and-aliases) section.
 
 :::tip
 Actions in an endpoint are all wrapped in a database transaction.
@@ -63,7 +64,7 @@ entrypoint User {
 
 Actions usually need some data to work with; they may receive it from the client or read it from the database. This data is called action's _"context"_. Actions can access data already stored in the context.
 
-If an action returns a result and defines an `alias`, result is stored and can be accessed by the name defined by the alias. Aliases stored in the context are immutable and cannot be overwritten by the subsequent actions.
+If an action returns a result and defines an `alias`, result is stored and can be accessed from context by that alias. Aliases stored in the context are immutable and cannot be overwritten by subsequent actions.
 
 Here's an example that describes this behavior:
 
@@ -81,9 +82,9 @@ create UsernameChangelog {
 }
 ```
 
-Each `entrypoint` can also specify an alias using `as` attribute.
+Each `entrypoint` can also specify an alias using `as` attribute which is used as a default alias for endpoint without one.
 
-Nested entrypoints create nested context. Aliases created in parent contexts are visible in child contexts. Shadowing of aliases in parent contexts is not allowed and an error will be thrown.
+Nested entrypoints create nested context. Aliases created in parent contexts are visible in child contexts. Shadowing of aliases from parent contexts is not allowed and an error will be thrown.
 
 An entrypoint alias is visible in contexts of single-cardinality endpoints, as well as in nested entrypoints.
 
@@ -110,7 +111,7 @@ entrypoint Topic as topic {
 
 ### Action inputs
 
-Gaudi generates a request schema from all `input` and `reference-through` defined in an action; keep in mind that `create` action may define inputs implicitly.
+Gaudi generates a request schema from all `input` and `reference-through` properties defined in an action; keep in mind that `create` action may define inputs implicitly.
 
 #### Examples
 
@@ -132,7 +133,6 @@ entrypoint Org {
 ```
 
 If an endpoint contains more than a default action, then a request schema is constructed of all of their models. Fields of non-default actions are always namespaced in action's alias to avoid name collision between different models. that means that alias is required for all non-default actions.
-
 
 ```js
 model Org {
@@ -170,7 +170,6 @@ entrypoint Org {
 //   }
 // }
 ```
-
 
 ### Extra inputs
 
@@ -213,4 +212,4 @@ model Org {
 
 Gaudi will ensure every input passes validation rules and will throw an error otherwise.
 
-You can write custom validation rules using [`validate` action](./actions.md#validation).
+You can write custom validation rules using [`validate` action](../reference/actions.md#validate-action).

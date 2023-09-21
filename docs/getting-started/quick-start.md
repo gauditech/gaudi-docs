@@ -12,7 +12,6 @@ To run it, you need the following software installed on your system:
 - Node.js v18+
 - PostgreSQL
 
-
 ## Installation
 
 ### New project
@@ -56,7 +55,7 @@ You can run Gaudi alongside existing [express](https://expressjs.com/) project. 
 npm install gaudi
 ```
 
-and run Gaudi application standalone or integrate it into an existing application. See [running Gaudi application](../core-concepts/application) for more details.
+and run Gaudi application standalone or integrate it into an existing application. See [running Gaudi application](../core-concepts/application#running) for more details.
 
 ## VSCode Extension
 

@@ -4,7 +4,7 @@ Hooks offer a way to expand your application **by writing custom code**. There a
 
 In models, `hook` property is used to enrich the model with custom data.
 
-Here are some examples where you'd want to use model hooks:
+Here are some examples of model hooks:
 
 ### Custom data manipulation
 

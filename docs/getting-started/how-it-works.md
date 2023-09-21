@@ -12,11 +12,11 @@ Gaudi consists of three main parts: **compiler**, **runtime**, **CLI**.
 
 #### Compiler
 
-Gaudi compiler [handles](./application#building) the "declarative programming language" part. It's job is to read all your Gaudi source files, validate them, report any errors and compile a so called application _"definition"_. This "definition" is a description, a set of instructions, for running your application.
+Gaudi compiler [handles](../core-concepts/application#building) the "declarative programming language" part. It's job is to read all your Gaudi source files, validate them, report any errors and compile a so called application _"definition"_. This "definition" is a description, a set of instructions, for running your application.
 
 #### Runtime
 
-Gaudi runtime [handles](application#running) the "run application" part. Runtime takes the "definition" created by the compiler, configures application endpoints, actions, validations, database connection, custom hooks, integrations, logging, ..., everything you've described in your Gaudi source files, and runs it.
+Gaudi runtime [handles](../core-concepts/application#running) the "run application" part. Runtime takes the "definition" created by the compiler, configures application endpoints, actions, validations, database connection, custom hooks, integrations, logging, ..., everything you've described in your Gaudi source files, and runs it.
 
 #### CLI
 
@@ -26,11 +26,11 @@ CLI is an interactive command line tool that is the entrypoint for all Gaudi par
 
 ## First application
 
-Let's walk through some of Gaudi's basic concepts by describing a simple book reviews application. This is not a full tutorial with all the details, just a conceptual walkthrough. You can find detailed tutorials in our [tutorials](../tutorials) section.
+Let's walk through some of Gaudi's basic concepts by describing a simple book reviews application. This is not a full tutorial with all the details, just a conceptual walkthrough. You can find detailed tutorials in our tutorials section.
 
 ### Create a model
 
-As any other application, let's start with our models.
+As for any other application, let's start with models.
 
 Gaudi model language is designed to be very intuitive and database agnostic. The idea is to worry about describing your models and relationships between them instead of database details.
 
@@ -57,7 +57,7 @@ Gaudi models support advanced relationship modeling techniques using `computed`,
 
 ### Expose an API
 
-Now that we have our models, we need to expose the underlying data to our clients and users; in other words, we need to create an API.
+Now that we have models in place, we need to expose the underlying data to our clients and users; in other words, we need to create an API.
 
 Gaudi uses a concept of `entrypoint`s which represent a group of endpoints and operations on a single resource, e.g. a model or a relation.
 
@@ -86,13 +86,13 @@ We've created 5 standard REST CRUD endpoints on each of our models in only a few
 
 ### Compile
 
-Now that we've described our simple application, we're ready to run it. Since Gaudi is a language after all, we need a compiler to convert it into something _"runnable"_. We run Gaudi compiler using Gaudi CLI tool
+We've described our simple application and we're ready to run it. Since Gaudi is a language after all, we need a compiler to convert it into something _"runnable"_. We can run Gaudi compiler using Gaudi CLI tool
 
 ```sh
 npx gaudi build
 ```
 
-Read more on compiling Gaudi apps [here](../core-concepts/application).
+Read more on compiling Gaudi apps [here](../core-concepts/application#building).
 
 ### Run
 
@@ -118,6 +118,7 @@ populator Dev {
     // repeat 15 times
     repeat as aIter 15
 
+    // we can reference iterator using it's alias "aIter"
     set name "Author #" + stringify(aIter.current)
 
     // populate Book model
@@ -136,19 +137,19 @@ populator Dev {
 
 Now we can run this populator each time we change our database and have our database populated.
 
-Ofc, we can have as many populators as we like. We can have e.g. one simple for development, one strict for testing, one randomized and real world for presentations, ... you get the point. Don't let your database be empty ever again!
+Ofc, we can have as many populators as we like. For example, we have a simple one for development, one strict for testing, one randomized with real world data for presentations, ... you get the point. Don't let your database be empty ever again!
 
 ### Custom code
 
 Declarative approach is great when it comes to using well known concepts and best practices for building most of our application. But every once in a while we simply need to resort to custom imperative code (e.g. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi hooks jump in. They are the _"escape hatches"_ which allow you to resort to any custom code or library you need and make sure it all runs happily inside Gaudi.
 
-Gaudi also supports expressions wich allow you custom data manipulations (e.g. string manipulation, number calculations, ...) while still staying in Gaudi's controlled environment.
+Gaudi also supports expressions which allow custom data manipulations (e.g. string manipulation, number calculations, ...) while still staying in Gaudi's controlled environment.
 
-Oh, did we mention you can use hooks and expressions in database queries and as model properties! 😎
+Oh, did we mention you can use hooks and expressions in model properties AND database queries? 😎
 
 ## Next steps
 
-What's next? We recommend that you read [Core concepts](../core-concepts/) first to get a better understanding of Gaudi basics. Then head for our [tutorials](../tutorials/) sections and pick some hands-on examples you can build on your own. For any further questions and deep dives please consult our [advanced topics](../advanced-topics) and [language reference](../reference/) section.
+What's next? We recommend that you read [Core concepts](../core-concepts) first to get a better understanding of Gaudi basics. Then head for our tutorials sections and pick some hands-on examples you can build on your own. For any further questions and deep dives please consult our [advanced topics](../advanced-topics) and [language reference](../reference/) section.
 
 We're sure you'll quickly have a ton of other questions and suggestions that we haven't thought of or haven't got around to put them in writing. That's where you come in! ;) Ask us, open an issue or event better, open a PR. :)
 

@@ -9,7 +9,7 @@ slug: /
 
 Gaudi is a backend development framework powered by a declarative domain specific language (_DSL_) that makes it easier to build, run and maintain web applications. It is designed to keep developers productive during development.
 
-With Gaudi, you can define your database schema using an intuitive, human-readable, database-agnostic language and expand it with advanced modeling concepts. Expose your data as simple CRUD REST endpoints with a few lines of code, customize their default behaviour or write completely custom endpoints. All using full declarativeness and type-safety of Gaudi, or even custom JS/TS code hooks.
+With Gaudi, you can define your database schema using an intuitive, human-readable, database-agnostic language and expand it with advanced modeling concepts. Expose your data as simple CRUD REST endpoints with a few lines of code, customize their default behavior or write completely custom endpoints. All using full declarativeness and type-safety of Gaudi, or even custom JS/TS code hooks.
 
 Gaudi improves productivity and developer experience with a combination of features:
 
@@ -18,7 +18,6 @@ Gaudi improves productivity and developer experience with a combination of featu
 - development mode, in which a database is automatically kept in sync with the models defined with Gaudi, optionally automatically populated with dummy/test data
 - automatic generation of OpenAPI specification with Swagger UI
 - automatic generation of a JavaScript client library with TypeScript support, achieving a full stack type safety, while making it easier integrate Gaudi with JavaScript applications
-
 
 ## Why Gaudi?
 

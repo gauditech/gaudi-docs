@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Hooks
 
-Declarative approach is excellent for many use-cases but every once in a while, we simply need to resort to custom imperative code (e.g. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi hooks come in. They are the _"escape hatches"_ which allow you to use any JS custom code or library you need and while still running it inside Gaudi.
+Declarative approach is excellent for many use-cases but every once in a while, we simply need to resort to custom imperative code (e.g. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi hooks come in. They are the _"escape hatches"_ which allow you to use any JS custom code or a library you need and run it inside Gaudi.
 
 First, you need to define a `runtime` which contains a path to your hooks folder.
 
@@ -20,16 +20,16 @@ This folder is relative to current working directory so make sure you matches yo
 
 Once a runtime is defined, you can add some hooks.
 
-## Hooks types
+## Hook types
 
 You can write hooks in two different ways:
 
 - `inline` - typically, simple one-liners,
-- `source` referencing a function defined in your `runtime` directory.
+- `source` - referencing a function defined in your `runtime` directory.
 
 ### Inline hooks
 
-Inline hook has access to args as if they were variables:
+Inline hooks contain entire code inlined inside a string. They have access to args as if they were variables.
 
 ```javascript
 hook {
@@ -40,7 +40,7 @@ hook {
 
 ### External hooks
 
-When you define a hook that loads external code:
+External hooks are located in outside, typically native, files (e.g. `.js` files) and are only referenced inside Gaudi code. This allows you to use native language tools when writing hooks while still using them inside Gaudi.
 
 ```javascript
 hook {
@@ -58,9 +58,11 @@ export function getValue(args) {
 }
 ```
 
-Make sure to `export` the function.
+Make sure to `export` hooks functions so Gaudi can find them.
 
 ## Hooks usage
+
+Hooks can be used in several places.
 
 ### Model hook
 
@@ -90,9 +92,9 @@ create as org {
 }
 ```
 
-### Execute hook
+### Execute action hook
 
-Execute hook has a context with an access to  `request` and `response` objects. It can be used within endpoint `action` block.
+Execute action hook is a way to define an action using completely custom JS code. Execute hook has a context with access to `request` and `response` objects.
 
 ```javascript
 action {
