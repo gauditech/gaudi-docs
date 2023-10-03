@@ -2,7 +2,7 @@
 sidebar_position: 6
 ---
 
-# Database
+# Database management
 
 One of Gaudi's primary goals is to provide developers with best possible tools and processes for handling database, both in development and production.
 

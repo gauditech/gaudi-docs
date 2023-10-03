@@ -173,7 +173,7 @@ entrypoint Org {
 
 ### Extra inputs
 
-Gaudi can autogenerate request schema and validation rules based on target model's fields, but if you need input fields that do not corelate directly to target model, you can expand your request schema using `extra input`s block. In this block you can define completely arbitrary fields regardless of your model. These extra fields are part of the context and can be referenced within an action block.
+Gaudi can autogenerate request schema and validation rules based on target model's fields, but if you need input fields that do not correlate directly to a target model, you can expand your request schema using `extra input`s block. In this block you can define completely arbitrary fields regardless of your model. These extra fields are part of the context and can be referenced within an action block.
 
 ```js
 entrypoint Org {

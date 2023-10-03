@@ -1,4 +1,8 @@
 {
   "position": 4,
-  "label": "Language reference"
+  "label": "Language reference",
+  "link": {
+    "type": "doc",
+    "id": "index"
+  }
 }

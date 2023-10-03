@@ -32,14 +32,36 @@ Gaudi comes with an embedded `express` server and if you're developing a pure Ga
 npx gaudi start
 ```
 
+#### Environment variables
+
+The following variables can be used to customize an embedded server:
+
+
+| Name                            | Default                                          | Description                                                                                                                      |
+|---------------------------------|--------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| `GAUDI_DIRECTORY_NAME`          | `"gaudi"`                                        | name of directory where Gaudi stores generated files that **should** be stored in version control (eg. database migration files) |
+| `GAUDI_DATABASE_URL`            |                         -                        | database connection string                                                                                                       |
+| `GAUDI_RUNTIME_SERVER_HOST`     | `"127.0.0.1"`                                    | HTTP server host                                                                                                                 |
+| `GAUDI_RUNTIME_SERVER_PORT`     | `3001`                                           | HTTP server port                                                                                                                 |
+| `GAUDI_RUNTIME_OUTPUT_PATH`     | `"dist"`                                         | output path for generated files which **should not** be stored in a version control                                              |
+| `GAUDI_RUNTIME_DEFINITION_PATH` | `GAUDI_RUNTIME_OUTPUT_PATH` + `"/definition.json"` | path to a definition file                                                                                                        |
+| `GAUDI_CORS_ORIGIN`             | `""` (disables CORS support)                     | a list of domains which support CORS support - use `"*"` to support any domain                                                   |
+
 ### Embedded Gaudi
 
 If you're already developing your Node.js application and want to embed Gaudi and develop other parts of your application within it you can use `useGaudi` express middleware provided by the `gaudi` package
 
 ```js
-import { useGaudi } from "@gaudi/runtime/dist/server/express";
+import { useGaudi } from "@gaudi/runtime";
 
 const app = express();
+
+const config = {
+  outputDirectory: "dist",
+  definitionPath: "dist/definition.json",
+  dbConnUrl: process.ENV.GAUDI_DATABASE_URL,
+  cors: { origin: true }
+}
 
 // embed Gaudi in root path "/"
 app.use(useGaudi(config));

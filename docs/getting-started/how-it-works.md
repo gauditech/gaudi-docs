@@ -137,15 +137,13 @@ populator Dev {
 
 Now we can run this populator each time we change our database and have our database populated.
 
-Ofc, we can have as many populators as we like. For example, we have a simple one for development, one strict for testing, one randomized with real world data for presentations, ... you get the point. Don't let your database be empty ever again!
+We can have as many populators as we like. For example, we can have a simple for development, one strict for testing, one randomized and real world for presentations, ... you get the point. Don't let your database be empty ever again!
 
 ### Custom code
 
-Declarative approach is great when it comes to using well known concepts and best practices for building most of our application. But every once in a while we simply need to resort to custom imperative code (e.g. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi hooks jump in. They are the _"escape hatches"_ which allow you to resort to any custom code or library you need and make sure it all runs happily inside Gaudi.
+Declarative approach is great when it comes to using well known concepts and best practices for building most of our application. But every once in a while we simply need to resort to custom imperative code (e.g. cryptography, payment, external tools and services, our own custom behavior, ...). This is where Gaudi **hooks** jump in. They are the _"escape hatches"_ which allow you to resort to any custom code or library you need and make sure it all runs happily inside Gaudi.
 
 Gaudi also supports expressions which allow custom data manipulations (e.g. string manipulation, number calculations, ...) while still staying in Gaudi's controlled environment.
-
-Oh, did we mention you can use hooks and expressions in model properties AND database queries? 😎
 
 ## Next steps
 

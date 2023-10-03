@@ -1,4 +1,8 @@
 {
   "position": 2,
-  "label": "Core concepts"
+  "label": "Core concepts",
+  "link": {
+    "type": "doc",
+    "id": "index"
+  }
 }

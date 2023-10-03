@@ -110,4 +110,6 @@ api {
 
 `create` and `update` endpoints typically accept input values from a client, most commonly via HTTP request body. Gaudi analyses the endpoint specification and automatically computes the desired request schema.
 
-More about this in [Actions](./actions.md#accessing-client-data)
+:::tip
+Behavior of request schema and working with client data are described in [Actions > Accessing client data](./actions.md#accessing-client-data)
+:::

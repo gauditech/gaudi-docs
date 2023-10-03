@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /advanced-topics
+slug: /advanced-topics/apis
 ---
 
 # APIs
@@ -62,5 +62,56 @@ api {
       create endpoint {}
     }
   }
+}
+```
+
+## Pagination
+
+`list` endpoint supports a `paginable` property. It modifies the endpoint to expect `page` and `pageSize` URL parameters. This property modifies the response schema.
+
+### Response schema
+
+#### Without `paginable`
+
+Consider the following snippet:
+
+```js
+entrypoint Post {
+  response { id, name }
+  list endpoint {}
+}
+```
+
+The response would look like this:
+
+```json
+[{ "id": 1, "name": "First post" }, { "id": 2, "name": "Second post" }]
+```
+
+#### With `paginable`
+
+With `paginable`, the Gaudi code would look like the following:
+
+```js
+entrypoint Post {
+  response { id, name }
+  list endpoint {
+    paginable
+  }
+}
+```
+
+And the response schema would be as follows:
+
+```json
+{
+  "page": 1,
+  "pageSize": 10,
+  "totalPages": 1,
+  "totalCount": 2,
+  "data": [
+    { "id": 1, "name": "First post" },
+    { "id": 2, "name": "Second post" }
+  ]
 }
 ```

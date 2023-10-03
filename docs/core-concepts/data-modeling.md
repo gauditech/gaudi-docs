@@ -1,15 +1,15 @@
 ---
 sidebar_position: 1
-slug: /core-concepts/models
+slug: /core-concepts/data-modeling
 ---
 
-# Models
+# Data modeling
 
 Gaudi provides a powerful data modeling language. You can describe your data structure and relationships using intuitive, human-readable and database agnostic language.
 
-## Model
+## Models
 
-Model is a named group of properties which typically corresponds to a database table.
+Model is a named group of properties which corresponds to a database table.
 
 ```
 model User {
@@ -19,7 +19,7 @@ model User {
 
 Model can specify a couple of different kinds of properties: `field`, `reference`, `relation`, `computed`, `query` and `hook`. These properties can be referenced in other parts of the code.
 
-## Field
+## Fields
 
 Fields are properties of a model that correspond to columns in database tables.
 
@@ -32,7 +32,7 @@ model Organization {
 }
 ```
 
-## Reference and relation
+## References and relations
 
 References and relations are properties that describe relationships between models. Relationships allow you to traverse your data model and implicitly apply parent-child filters when querying your data. They can be used to fetch but also to modify related data when reading or modifying data in database, respectively.
 
@@ -50,7 +50,7 @@ model Owner {
 }
 ```
 
-## Query
+## Queries
 
 Queries are properties written in Gaudi's query language and can be used to additionally query current model's relationships or other models. They can be used to build custom relationships between models which provide additional semantics not reflected in the database schema, but that exists in a business domain.
 
@@ -63,7 +63,7 @@ model Organization {
 }
 ```
 
-## Computed
+## Computed expressions
 
 Similarly, `computed` properties are written using Gaudi's expression but can resolve only to primitive values (`field`-like), but are calculated on-the-fly and are not persisted in the database.
 
@@ -81,7 +81,7 @@ model Organization {
 `computed` properties can be used in query expressions (`filter`, `order by`).
 :::
 
-## Hook
+## Hooks
 
 Hooks are properties that can be used to enrich data models with data that cannot be calculated in a database, or are not supported natively via Gaudi language. They execute custom code and store results in the data model.
 
@@ -124,13 +124,13 @@ model Organization {
 
 model Owner {
   // complements "Organization.owner" reference
-  relation org { from Organization, through owner}
+  relation org { from Organization, through owner }
 
   // ... other fields
 }
 
 model Announcement {
-  reference org{ to Organization, unique }
+  reference org { to Organization, unique }
 
   // ... other fields
 }

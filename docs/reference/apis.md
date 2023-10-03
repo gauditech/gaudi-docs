@@ -109,13 +109,44 @@ Uses `GET` HTTP method.
 ##### Syntax
 
 ```js
-list endpoint {}
+list endpoint {
+  <properties>
+}
 ```
 
 URL syntax
 
 ```
 GET /api/<resource name>
+```
+
+### Properties
+
+#### `filter`
+
+Filter can be used to control which records are returned to a user.
+
+##### Syntax
+
+```js
+filter { <expression> }
+```
+
+#### `paginable`
+
+Returns only a subset of records, based on `page` and `pageSize` URL parameters. This property modifies the response schema, as described at [Advanced topics > APIs > Pagination](../advanced-topics/apis#pagination)
+
+### Example
+
+```js
+entrypoint Post {
+  list endpoint {
+    filter {
+      // list only public posts or user's own posts
+      isPublic is true or author is @auth
+    }
+  }
+}
 ```
 
 ## Update endpoint
