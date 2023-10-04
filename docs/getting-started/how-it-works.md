@@ -22,7 +22,13 @@ Gaudi runtime [handles](../core-concepts/application#running) the "run applicati
 
 CLI is an interactive command line tool that is the entrypoint for all Gaudi parts. Use it to compile your app, to run it, to sync and populate your development database, to migrate your production database, ...
 
-// TODO: Gaudi architecture image
+Here is a simple schematic diagram of Gaudi's architecture
+
+![Gaudi Architecture Diagram](/img/gaudi_architecture_1.png "Gaudi architecture diagram")
+
+<div className="text--center text--italic">
+Gaudi architecture diagram
+</div>
 
 ## First application
 
