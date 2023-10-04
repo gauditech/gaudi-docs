@@ -2,13 +2,11 @@
 
 ## Intro
 
-You've probably heard of the famous "TodoMVC" application. It was originally written by Addy Osmani of Google, not as a specific application but more as a project that provides a variety of implementations of a simple to-do list application. It is used to show and compare different JavaScript frameworks, technologies and even performance benchmarks. It's gotten so famous that it even got it's own [website](https://todomvc.com/) and it's own [application specification](https://github.com/tastejs/todomvc/blob/master/app-spec.md).
+You've probably heard of the famous "TodoMVC" application. It was originally written by Addy Osmani of Google, not as a specific application but more as a project that provides a variety of implementations of a simple to-do list application. It is used to showcase and compare different JavaScript frameworks, technologies and even performance benchmarks. Over time, it's gotten so famous that it even got its own [website](https://todomvc.com/) and an [application specification](https://github.com/tastejs/todomvc/blob/master/app-spec.md).
 
-The other day we were talking about writing a tutorial on creating an application that would showcase the power and ease of programming backend APIs in Gaudi. Since the whole point of a backend is to be used by some client or a frontend, we obviously need to create or find a frontend that would complete our demo project. After some brainstorming, we've all agreed that "TodoMVC" was the perfect fit because it was simple, well known, publicly [specified](https://github.com/tastejs/todomvc/blob/master/app-spec.md) and needed no additional introductions. Moreover, it already had a prepared [template](https://github.com/tastejs/todomvc-app-template) and [styles](https://github.com/tastejs/todomvc-app-css/) so we could focus on implementing application logic and still have our application look nice. Win, win. :)
+Since it is used to showcase frameworks capabilities, let's use it to showcase the power and ease of programming backend APIs in Gaudi. "TodoMVC" is simple, well known, publicly specified and needs no additional introductions. Moreover, it already has a prepared [template](https://github.com/tastejs/todomvc-app-template) and [styles](https://github.com/tastejs/todomvc-app-css/) so we can focus on implementing application logic and still have our application look nice. Win, win. :)
 
-Since "TodoMVC" primarily defines a GUI application and as such implemented mostly as a GUI-only applications, to communicate with our Gaudi backend we could either customize one of the existing examples or write a completely new GUI for our tutorial. Examples available at [todomvc.com](https://todomvc.com/) were pretty outdated and unmaintained so we've decided to go with our own GUI implemented with [React](htps://react.dev) and [Typescript](https://www.typescriptlang.org/).
-
-So, let's get to work ...
+There are many existing "TodoMVC" example applications available at [todomvc.com](https://todomvc.com/) but they're all pretty outdated and unmaintained so we'll implement our own application using [React](htps://react.dev) and [Typescript](https://www.typescriptlang.org/)
 
 ## Project setup
 
