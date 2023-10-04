@@ -15,12 +15,12 @@ If all checks pass without issues, the Gaudi compiler will produce a _"definitio
 To execute the Gaudi compiler, use Gaudi CLI in your project directory.
 
 ```sh
-npx gaudi-compiler
+npx gaudi build
 ```
 
 ## Running
 
-Gaudi runtime is a Node.js based backend runtime that takes a _"definition"_ file produced by the Gaudi compiler and starts your application.
+Gaudi runtime is a Node.js based backend runtime that takes a _"definition"_ file produced by the Gaudi compiler and runs your application.
 
 Gaudi can be run as a standalone server or be integrated into an existing Node.js application. Currently, Gaudi supports [express](https://expressjs.com/) web server.
 
@@ -29,17 +29,39 @@ Gaudi can be run as a standalone server or be integrated into an existing Node.j
 Gaudi comes with an embedded `express` server and if you're developing a pure Gaudi application, you can simply start your application via the CLI.
 
 ```sh
-gaudi start
+npx gaudi start
 ```
+
+#### Environment variables
+
+The following variables can be used to customize an embedded server:
+
+
+| Name                            | Default                                          | Description                                                                                                                      |
+|---------------------------------|--------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| `GAUDI_DIRECTORY_NAME`          | `"gaudi"`                                        | name of directory where Gaudi stores generated files that **should** be stored in version control (eg. database migration files) |
+| `GAUDI_DATABASE_URL`            |                         -                        | database connection string                                                                                                       |
+| `GAUDI_RUNTIME_SERVER_HOST`     | `"127.0.0.1"`                                    | HTTP server host                                                                                                                 |
+| `GAUDI_RUNTIME_SERVER_PORT`     | `3001`                                           | HTTP server port                                                                                                                 |
+| `GAUDI_RUNTIME_OUTPUT_PATH`     | `"dist"`                                         | output path for generated files which **should not** be stored in a version control                                              |
+| `GAUDI_RUNTIME_DEFINITION_PATH` | `GAUDI_RUNTIME_OUTPUT_PATH` + `"/definition.json"` | path to a definition file                                                                                                        |
+| `GAUDI_CORS_ORIGIN`             | `""` (disables CORS support)                     | a list of domains which support CORS support - use `"*"` to support any domain                                                   |
 
 ### Embedded Gaudi
 
-If you're already developing your Node.js aplication and want to embed Gaudi and develop other parts of your application within it you can use `useGaudi` express middleware provided by the `gaudi` package
+If you're already developing your Node.js application and want to embed Gaudi and develop other parts of your application within it you can use `useGaudi` express middleware provided by the `gaudi` package
 
 ```js
-import { useGaudi } from "@gaudi/runtime/dist/server/express";
+import { useGaudi } from "@gaudi/runtime";
 
 const app = express();
+
+const config = {
+  outputDirectory: "dist",
+  definitionPath: "dist/definition.json",
+  dbConnUrl: process.ENV.GAUDI_DATABASE_URL,
+  cors: { origin: true }
+}
 
 // embed Gaudi in root path "/"
 app.use(useGaudi(config));
@@ -51,3 +73,7 @@ app.listen(3001, "localhost", () => {
   console.log(`Gaudi app is started ...`);
 });
 ```
+
+### Database access
+
+Application needs a database connection in order to run. Database access is configured as an environment variable `GAUDI_DATABASE_URL` located in `.env` so make sure this matches your database configuration.

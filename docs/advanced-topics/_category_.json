@@ -1,4 +1,8 @@
 {
   "position": 3,
-  "label": "Advanced topics"
+  "label": "Advanced topics",
+  "link": {
+    "type": "doc",
+    "id": "index"
+  }
 }

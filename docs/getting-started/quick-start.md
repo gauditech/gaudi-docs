@@ -6,7 +6,11 @@ sidebar_position: 3
 
 ## Requirements
 
-Gaudi is published as an NPM package so you must have `node` and `npm` [installed](https://nodejs.org/en/download) on your machine. We recommend installing the latest Node.js LTS version (currently _18.x_).
+Gaudi is published as a NPM package.
+To run it, you need the following software installed on your system:
+
+- Node.js v18+
+- PostgreSQL
 
 ## Installation
 
@@ -51,7 +55,7 @@ You can run Gaudi alongside existing [express](https://expressjs.com/) project. 
 npm install gaudi
 ```
 
-and run Gaudi application standalone or integrate it into an existing application. See [running Gaudi application](../core-concepts/application) for more details.
+and run Gaudi application standalone or integrate it into an existing application. See [running Gaudi application](../core-concepts/application#running) for more details.
 
 ## VSCode Extension
 

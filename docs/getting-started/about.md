@@ -7,19 +7,21 @@ slug: /
 
 ## What is Gaudi?
 
-Gaudi is an open source declarative domain specific language (_DSL_) and a backend development framework that makes it easier to build, run and maintain web applications.
+Gaudi is a backend development framework powered by a declarative domain specific language (_DSL_) that makes it easier to build, run and maintain web applications. It is designed to keep developers productive during development.
 
-With Gaudi, you can define your database schema using intuitive, human-readable language and database agnostic language and expand it with advanced modeling concepts.
+With Gaudi, you can define your database schema using an intuitive, human-readable, database-agnostic language and expand it with advanced modeling concepts. Expose your data as simple CRUD REST endpoints with a few lines of code, customize their default behavior or write completely custom endpoints. All using full declarativeness and type-safety of Gaudi, or even custom JS/TS code hooks.
 
-Gaudi is designed to keep you productive during development. Whether you're just iterating your ideas, or switching between Git branches with completely different database models, your database will automatically be kept in sync and populated with the appropriate data.
+Gaudi improves productivity and developer experience with a combination of features:
 
-You can expose your data as a simple CRUD REST endpoint with a single line of Gaudi code. Customize default CRUD behavior or go beyond CRUD and write completely custom endpoints using full declarativeness and type-safety of Gaudi or even custom code hooks.
+- language compiler with type checker to give you an early feedback on mistakes
+- a declarative syntax designed to be easy to understanding, focusing on "what" rather than "how"
+- development mode, in which a database is automatically kept in sync with the models defined with Gaudi, optionally automatically populated with dummy/test data
+- automatic generation of OpenAPI specification with Swagger UI
+- automatic generation of a JavaScript client library with TypeScript support, achieving a full stack type safety, while making it easier integrate Gaudi with JavaScript applications
 
-// TODO: what is gaudi image or video about gaudi (simple explanation)
+## Why Gaudi?
 
-# Why Gaudi?
-
-Most web application share similar structure. They have a database with some structure and some data, they want to expose those data to their clients and the clients need to have a way to access it and consume it. This single sentence condenses several layer of web architecture, a lot of technologies and even more boilerplate code and configuration. Once all this is set up and an application is in production, the work is far from over. All those layers, technologies, boilerplate and configuration need to be maintained, improved and upgraded, over the years. This puts an unnecessary strain on any IT department, especially if your resources are constrained in any way.
+Most web applications share similar structure. They have a database with a specific structure and some data, they want to expose subsets of data to their clients and the clients need to have a way to access it and consume it. This single sentence condenses several layer of web architecture, a lot of technologies and even more boilerplate code and configuration. Once all this is set up and an application is in production, the work is far from over. All those layers, technologies, boilerplate and configuration need to be maintained, improved and upgraded, over the years. This puts an unnecessary strain on any IT department, especially if your resources are constrained in any way.
 
 Well, we've also been in this situation and that's why we've decided to build Gaudi, to solve this problem for us as well as for you. 🤛
 
@@ -34,19 +36,21 @@ model Author {
   // ... other fields
 }
 
-entrypoint Author {
-  // all CRUD endpoints except DELETE
-  create endpoint {}
-  list endpoint {}
-  get endpoint {}
-  update endpoint {}
-  // delete endpoint {}
+api {
+  entrypoint Author {
+    // all CRUD endpoints except DELETE
+    create endpoint {}
+    list endpoint {}
+    get endpoint {}
+    update endpoint {}
+    // delete endpoint {}
+  }
 }
 ```
 
 This is all you need to write. Just compile it and run using Gaudi and you'll get your database and endpoints running in no time. And ... that's it! 🎉
 
-## Why DSL?
+## Why a DSL?
 
 To quote [Wikipedia](https://en.wikipedia.org/wiki/Domain-specific_language): _"A domain-specific language (DSL) is a computer language specialized to a particular application domain."_
 

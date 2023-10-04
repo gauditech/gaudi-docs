@@ -1,4 +1,8 @@
 {
   "position": 6,
-  "label": "Other"
+  "label": "Other",
+  "link": {
+    "type": "doc",
+    "id": "index"
+  }
 }

@@ -4,7 +4,7 @@ Hooks offer a way to expand your application **by writing custom code**. There a
 
 In models, `hook` property is used to enrich the model with custom data.
 
-Here are some examples where you'd want to use model hooks:
+Here are some examples of model hooks:
 
 ### Custom data manipulation
 
@@ -32,9 +32,7 @@ model User {
   field stripeId { type string }
   // highlight-start
   hook stripePaymentHistory {
-    params {
-      user: query { select { id, stripeId } }
-    }
+      arg user query { select { id, stripeId } }
     // define your custom logic here
     source fetchUserPaymentHistory from "./hooks/stripe.js"
   }
@@ -43,17 +41,3 @@ model User {
 ```
 
 Gaudi will invoke the `fetchUserPaymentHistory` only when needed. You can read more about Gaudi data retreival and computation logic HERE: TODO.
-
----
-
-// TODO: describe multiple and defualt runtimes
-
-Typically, you'll have only one runtime. In case you define multiple, you either should mark one of them `default`, otherwise you'll have to specify which runtime to use:
-
-```javascript
-hook myModelHook {
-  runtime MyJsRuntime
-  arg value 41
-  source runHook from "./examples.js"
-}
-```

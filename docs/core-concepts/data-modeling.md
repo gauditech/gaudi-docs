@@ -1,33 +1,29 @@
 ---
 sidebar_position: 1
-slug: /core-concepts
+slug: /core-concepts/data-modeling
 ---
 
-# Models
+# Data modeling
 
-Gaudi provides a powerful data modeling language. You can describe your data models and relations using intuitive, human-readable and database agnostic language.
+Gaudi provides a powerful data modeling language. You can describe your data structure and relationships using intuitive, human-readable and database agnostic language.
 
-Modeling language consists of 2 core concepts: **model** and **fields**.
+## Models
 
-## Model
-
-Model is a named group of fields which typically corresponds to a database table.
+Model is a named group of properties which corresponds to a database table.
 
 ```
 model User {
-  // ... fields
+  // ... properties
 }
 ```
 
+Model can specify a couple of different kinds of properties: `field`, `reference`, `relation`, `computed`, `query` and `hook`. These properties can be referenced in other parts of the code.
+
 ## Fields
 
-In general, fields are properties of a model and can be divided in 4 types:
+Fields are properties of a model that correspond to columns in database tables.
 
-### `field`
-
-Basic fields are properties of a model that correspond to columns in database tables.
-
-Fields can have only primitive values and can have data validation properties (e.g. `nullable`, `required`, custom validations)
+Fields can store only primitive values and can have data validation properties (e.g. `nullable`, `required`, `validate`)
 
 ```js
 model Organization {
@@ -36,7 +32,7 @@ model Organization {
 }
 ```
 
-### `reference` and `relation`
+## References and relations
 
 References and relations are properties that describe relationships between models. Relationships allow you to traverse your data model and implicitly apply parent-child filters when querying your data. They can be used to fetch but also to modify related data when reading or modifying data in database, respectively.
 
@@ -54,33 +50,38 @@ model Owner {
 }
 ```
 
-### `query` and `computed`
+## Queries
 
-Queries are properties written in Gaudi's query language and can be used to additionaly query current model's relationships or other models. They can be used to build custom relationships between models which provide additional semantics not reflected in the database schema, but that exists in a business domain.
+Queries are properties written in Gaudi's query language and can be used to additionally query current model's relationships or other models. They can be used to build custom relationships between models which provide additional semantics not reflected in the database schema, but that exists in a business domain.
 
 ```js
 model Organization {
   // returns 5 latest announcements
-  query recent_anonuncements {
+  query recent_announcements {
     from announcements, order by { created_at desc }, limit 5
   }
 }
 ```
 
+## Computed expressions
+
 Similarly, `computed` properties are written using Gaudi's expression but can resolve only to primitive values (`field`-like), but are calculated on-the-fly and are not persisted in the database.
 
-Computed properties can use any model field, including queries, to calculate a new value.
+Computed properties can use any model property to calculate a new value, as long as it results in a primitive value.
 
 ```js
 model Organization {
   // calculate computed properties on the fly
-  computed summary { "Organization " + name + " has " + count(announcements) + " announcements" }
+  computed summary { "Organization " + name + " has " +
+                    count(announcements) + " announcements" }
 }
 ```
 
-Both `query` and `computed` properties are also available in query expressions (`filter`, `order by`).
+:::tip
+`computed` properties can be used in query expressions (`filter`, `order by`).
+:::
 
-### `hook`
+## Hooks
 
 Hooks are properties that can be used to enrich data models with data that cannot be calculated in a database, or are not supported natively via Gaudi language. They execute custom code and store results in the data model.
 
@@ -108,7 +109,7 @@ model Organization {
 
   // query through data relationships
   // returns 5 latest announcements
-  query recent_anonuncements {
+  query recent_announcements {
     from announcements, order by { created_at desc }, limit 5
   }
 
@@ -123,13 +124,13 @@ model Organization {
 
 model Owner {
   // complements "Organization.owner" reference
-  relation org { from Organization, through owner}
+  relation org { from Organization, through owner }
 
   // ... other fields
 }
 
 model Announcement {
-  reference org{ to Organization, unique }
+  reference org { to Organization, unique }
 
   // ... other fields
 }

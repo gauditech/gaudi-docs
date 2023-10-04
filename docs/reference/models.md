@@ -1,15 +1,13 @@
 ---
 sidebar_position: 1
-slug: /reference
+slug: /reference/models
 ---
 
 # Models
 
 ## Models
 
-Model is a named group of fields which typically corresponds to a database table. It consists of a name and a list of fields.
-
-### Syntax
+Model is a named group of fields which correspond to a database table. It consists of a name and a list of fields.
 
 ```js
 model User {
@@ -62,9 +60,9 @@ field rating {
 ##### `unique`
 
 Marks a field as unique. This will create a unique constraint on the field in the database.
-TODO: `unique` propery also affects a compiler type checking in certain scenarios.
+TODO: `unique` property also affects a compiler type checking in certain scenarios.
 
-TODO: Learn more: [identify through, usage of "one"](data-modeling)
+TODO: Learn more: [identify through, usage of "one"](../advanced-topics/actions.md#behavior-of-create-and-update-actions)
 
 ```js
 field name {
@@ -166,11 +164,17 @@ reference organization {
 }
 ```
 
+##### `on delete`
+
+You can pass an SQL "ON DELETE" clause. Supported options are:
+- `on delete set null`
+- `on delete cascade`
+
 ## Relations
 
 Relation defines an opposite side of a `reference`. A `reference` should have **exactly one** corresponding relation.
 
-Example:
+#### Examples
 
 ```js
 model User {
@@ -280,6 +284,72 @@ model Users {
   field first_name { type string }
   field last_name { type string }
   // highlight-next-line
-  computed name_length { length (first_name + " " + last_name)}
+  computed name_length { length(first_name + " " + last_name) }
 }
+```
+
+## Hooks
+
+Model hooks can be used to augment a record with data provided by custom code.
+
+### Properties
+
+#### `arg`
+
+Passes a value to a hook context. It can be an expression or a query. If query omits `from`, it is sourced from the current record. This can be used to pass specific record fields to a hook.
+
+:::tip
+Check out [advanced data selection](../advanced-topics/actions.md#advanced-data-selection) guide to learn how to pass more complex data structures!
+:::
+
+##### Examples
+
+```js
+model User {
+  field name { type string }
+  hook uppercaseName {
+    // query argument
+    // highlight-next-line
+    arg user query { select { name } }
+    // expression arguments
+    // highlight-next-line
+    arg prefix "Name: "
+    // highlight-next-line
+    arg currentTime now()
+    inline "prefix + user.name.toUpperCase() + ' at: ' + stringify(currentTime)"
+  }
+}
+```
+
+#### `inline`
+
+Defines an inline Javascript expression that has access to data defined with `arg`. Cannot be used together with `source`.
+
+See the example above.
+
+#### `source`
+
+Defines a function which will be called with provided arguments. Function accepts a single argument which is a map of values.
+
+##### Examples
+
+```js
+model User {
+  field name { type string }
+  hook uppercaseName {
+    arg user query { select { name } }
+    arg prefix ", msc."
+    // highlight-next-line
+    source makeUpper from "hooks/strings.js"
+  }
+}
+```
+
+```js
+// in strings.js
+module.exports = {
+  makeUpper: function (args) {
+    return args.user.name + " " + args.prefix;
+  },
+};
 ```
