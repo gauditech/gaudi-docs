@@ -164,6 +164,12 @@ reference organization {
 }
 ```
 
+##### `on delete`
+
+You can pass an SQL "ON DELETE" clause. Supported options are:
+- `on delete set null`
+- `on delete cascade`
+
 ## Relations
 
 Relation defines an opposite side of a `reference`. A `reference` should have **exactly one** corresponding relation.
