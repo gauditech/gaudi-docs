@@ -137,7 +137,7 @@ populator Dev {
 
 Now we can run this populator each time we change our database and have our database populated.
 
-We can have as many populators as we like. For example, we can have a simple for development, one strict for testing, one randomized and real world for presentations, ... you get the point. Don't let your database be empty ever again!
+We can have as many populators as we like. For example, we can have a simple for development, one strict for testing and one randomized with real world data for presentations. Don't let your database be empty ever again!
 
 ### Custom code
 

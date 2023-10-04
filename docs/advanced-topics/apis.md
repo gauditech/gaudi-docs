@@ -10,7 +10,6 @@ slug: /advanced-topics/apis
 Single cardinality endpoints (e.g. `get` and `update` endpoints) must have a target record on which they will work on. They take the parameter from URL and try to match a target record by one of it's fields.
 By default, they will match them by `id` field but if you need to match them by another field (e.g. `slug`) you can use entrypoints `identify` atom.
 
-
 ```js
 model Repo {
   field name { type string }
@@ -69,6 +68,12 @@ api {
 
 `list` endpoint supports a `paginable` property. It modifies the endpoint to expect `page` and `pageSize` URL parameters. This property modifies the response schema.
 
+Example request with pagination parameters
+
+```
+https://<domain>/api/posts?page=2&pageSize=20
+```
+
 ### Response schema
 
 #### Without `paginable`
@@ -85,7 +90,10 @@ entrypoint Post {
 The response would look like this:
 
 ```json
-[{ "id": 1, "name": "First post" }, { "id": 2, "name": "Second post" }]
+[
+  { "id": 1, "name": "First post" },
+  { "id": 2, "name": "Second post" }
+]
 ```
 
 #### With `paginable`
