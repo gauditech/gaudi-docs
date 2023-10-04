@@ -2,9 +2,9 @@
 
 ## Intro
 
-You've probably all heard of the famous "TodoMVC" application. It was originally written by Addy Osmani of Google, not as a specific application but more as a project that provides a variety of implementations of a simple to-do list application. It is used to show and compare different JavaScript frameworks, technologies and even performance benchmarks. It's gotten so famous that it even got it's own [website](https://todomvc.com/) and it's own [application specification](https://github.com/tastejs/todomvc/blob/master/app-spec.md).
+You've probably heard of the famous "TodoMVC" application. It was originally written by Addy Osmani of Google, not as a specific application but more as a project that provides a variety of implementations of a simple to-do list application. It is used to show and compare different JavaScript frameworks, technologies and even performance benchmarks. It's gotten so famous that it even got it's own [website](https://todomvc.com/) and it's own [application specification](https://github.com/tastejs/todomvc/blob/master/app-spec.md).
 
-The other day we were talking about writing a tutorial on creating an application that would showcase the power and ease of programming backend APIs in Gaudi. Since the whole point of a backend is to be used by some client or a frontend, we obviously need to create or find a frontend that would complete our demo project. After some brainstorming, we've all agreed that "TodoMVC" was the perfect fit because it was simple, well known, publicly [specified](https://github.com/tastejs/todomvc/blob/master/app-spec.md) and needed no additional introductions. Moreover, it already had a prepared [template](https://github.com/tastejs/todomvc-app-template) and [styles](https://github.com/tastejs/todomvc-app-css/) so we could focus on implementing application logic and stil have our aplication look nice. Win, win. :)
+The other day we were talking about writing a tutorial on creating an application that would showcase the power and ease of programming backend APIs in Gaudi. Since the whole point of a backend is to be used by some client or a frontend, we obviously need to create or find a frontend that would complete our demo project. After some brainstorming, we've all agreed that "TodoMVC" was the perfect fit because it was simple, well known, publicly [specified](https://github.com/tastejs/todomvc/blob/master/app-spec.md) and needed no additional introductions. Moreover, it already had a prepared [template](https://github.com/tastejs/todomvc-app-template) and [styles](https://github.com/tastejs/todomvc-app-css/) so we could focus on implementing application logic and still have our application look nice. Win, win. :)
 
 Since "TodoMVC" primarily defines a GUI application and as such implemented mostly as a GUI-only applications, to communicate with our Gaudi backend we could either customize one of the existing examples or write a completely new GUI for our tutorial. Examples available at [todomvc.com](https://todomvc.com/) were pretty outdated and unmaintained so we've decided to go with our own GUI implemented with [React](htps://react.dev) and [Typescript](https://www.typescriptlang.org/).
 
@@ -63,7 +63,7 @@ api {
     create endpoint {}
     // update existing todo
     update endpoint {}
-    // delete toso
+    // delete todo
     delete endpoint {}
   }
 }
@@ -126,7 +126,7 @@ npx create-react-app my-app --template typescript
 
 As mentioned before, Todo MVC project already has prepared [template](https://github.com/tastejs/todomvc-app-template) and [styles](https://github.com/tastejs/todomvc-app-css/) which we will use in this demo to get the same look and feel as other implementations.
 
-Since this is a React application, we will devide our markup to several components to make application more readable and maintainable. We will create the following components:
+Since this is a React application, we will divide our markup to several components to make application more readable and maintainable. We will create the following components:
 
 - `App.tsx` - main component which composes other components, proxies events API calls and serves as a data container
 - `Header.tsx` - titlebar, editor for new todos
@@ -206,7 +206,7 @@ function App() {
   // state for todos
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  // event callbeck that fetches todo list from API
+  // event callback that fetches todo list from API
   const fetchAll = useCallback(async () => {
     // call the API
     const data = await TodoApi.list();
