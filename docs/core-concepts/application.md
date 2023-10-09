@@ -36,16 +36,15 @@ npx gaudi start
 
 The following variables can be used to customize an embedded server:
 
-
-| Name                            | Default                                          | Description                                                                                                                      |
-|---------------------------------|--------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| `GAUDI_DIRECTORY_NAME`          | `"gaudi"`                                        | name of directory where Gaudi stores generated files that **should** be stored in version control (eg. database migration files) |
-| `GAUDI_DATABASE_URL`            |                         -                        | database connection string                                                                                                       |
-| `GAUDI_RUNTIME_SERVER_HOST`     | `"127.0.0.1"`                                    | HTTP server host                                                                                                                 |
-| `GAUDI_RUNTIME_SERVER_PORT`     | `3001`                                           | HTTP server port                                                                                                                 |
-| `GAUDI_RUNTIME_OUTPUT_PATH`     | `"dist"`                                         | output path for generated files which **should not** be stored in a version control                                              |
+| Name                            | Default                                            | Description                                                                                                                      |
+| ------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `GAUDI_DIRECTORY_NAME`          | `"gaudi"`                                          | name of directory where Gaudi stores generated files that **should** be stored in version control (eg. database migration files) |
+| `GAUDI_DATABASE_URL`            | -                                                  | database connection string                                                                                                       |
+| `GAUDI_RUNTIME_SERVER_HOST`     | `"127.0.0.1"`                                      | HTTP server host                                                                                                                 |
+| `GAUDI_RUNTIME_SERVER_PORT`     | `3001`                                             | HTTP server port                                                                                                                 |
+| `GAUDI_RUNTIME_OUTPUT_PATH`     | `"dist"`                                           | output path for generated files which **should not** be stored in a version control                                              |
 | `GAUDI_RUNTIME_DEFINITION_PATH` | `GAUDI_RUNTIME_OUTPUT_PATH` + `"/definition.json"` | path to a definition file                                                                                                        |
-| `GAUDI_CORS_ORIGIN`             | `""` (disables CORS support)                     | a list of domains which support CORS support - use `"*"` to support any domain                                                   |
+| `GAUDI_CORS_ORIGIN`             | `""` (disables CORS support)                       | a list of domains which support CORS support - use `"*"` to support any domain                                                   |
 
 ### Embedded Gaudi
 
@@ -60,8 +59,8 @@ const config = {
   outputDirectory: "dist",
   definitionPath: "dist/definition.json",
   dbConnUrl: process.ENV.GAUDI_DATABASE_URL,
-  cors: { origin: true }
-}
+  cors: { origin: true },
+};
 
 // embed Gaudi in root path "/"
 app.use(useGaudi(config));
@@ -72,6 +71,20 @@ app.use(useGaudi(config));
 app.listen(3001, "localhost", () => {
   console.log(`Gaudi app is started ...`);
 });
+```
+
+#### Using with Gaudi CLI
+
+Gaudi CLI `dev` command automates common development tasks (e.g. file compilation, copying static resources, watching for changes, ...) which gives you a smoother dev experience. By default, it uses internal `express` application which cannot be extended by developers. To use your own application server and still benefit from Gaudi CLI's automation, you can give CLI the path to your application script and Gaudi will use it instead of the default one.
+
+```sh
+npx gaudi dev --runtimePath=./dist/my_server.js
+```
+
+If you have other resources that affect runtime, e.g. if you compile your server or hooks from TypeScript to JavaScript or copy other files to output folder, you can include those files into Gaudi's watched resources list so it can reload you application when those files are changed as well.
+
+```sh
+npx gaudi dev --runtimePath=./dist/my_server.js --watch=.dist/*.js  --watch=.dist/other_config.json
 ```
 
 ### Database access

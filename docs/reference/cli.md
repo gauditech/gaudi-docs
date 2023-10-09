@@ -32,6 +32,16 @@ gaudi dev [root]
 
 Set working directory
 
+#### Options
+
+##### --runtimePath, -r
+
+Path to custom server runtime script. See [embedded Gaudi](../core-concepts/application.md#embedded-gaudi).
+
+##### --watch, -w
+
+Path to custom resources dev mode should include in watched resources list. Supports glob patterns. Use multiple parameters to set multiple paths.
+
 ### start
 
 Start application server
@@ -39,6 +49,12 @@ Start application server
 ```sh
 gaudi start [root]
 ```
+
+#### Options
+
+##### --runtimePath, -r
+
+Path to custom server runtime script. See [embedded Gaudi](../core-concepts/application.md#embedded-gaudi).
 
 ##### root
 
